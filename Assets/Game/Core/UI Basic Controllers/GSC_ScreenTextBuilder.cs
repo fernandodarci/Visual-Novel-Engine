@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -16,39 +17,33 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
     private byte alphaThreshold => 15;
 
     public bool IsRunning { get; private set; }
-
-    public void Interrupt()
-    {
-        ContinueToBuild = false;
-    }
-
+   
     // Method to build text based on the provided dialogue line
-    public IEnumerator BuildText(GSC_ContainerUnit line)
+    public IEnumerator BuildText(string dialogue, float duration, bool append)
     {
         switch (Method)
         {
             case GSC_TextBuildMethod.Typewriter:
-                yield return BuildTypewriter(line);
+                yield return BuildTypewriter(dialogue, duration, append);
                 break;
 
             case GSC_TextBuildMethod.Fade:
-                yield return BuildFade(line);
+                yield return BuildFade(dialogue, duration, append);
                 break;
 
             default:
-                BuildInstant(line);
+                BuildInstant(dialogue, append);
                 break;
         }
 
         OnComplete();
     }
 
-    private void BuildInstant(GSC_ContainerUnit line)
+    private void BuildInstant(string dialogue, bool append)
     {
-        if (line.GetBoolean("Append") == false) Textline.text = string.Empty;
-        Textline.text += line.GetString("Dialogue");
+        if (append == false) Textline.text = string.Empty;
+        Textline.text += dialogue;
         OnComplete();
-
     }
 
     // Finalize the text-building process
@@ -60,34 +55,33 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
         IsBuilding = false;
     }
 
-    private IEnumerator BuildTypewriter(GSC_ContainerUnit Line)
+    private IEnumerator BuildTypewriter(string dialogue, float duration, bool append)
     {
         IsBuilding = true;
         ContinueToBuild = true;
 
-        if (Line.GetBoolean("Append") == false)
+        if (append == false)
         {
             Textline.text = string.Empty;
             Textline.ForceMeshUpdate();
         }
 
-        Debug.Log("Typewriter started: " + Line.GetString("Dialogue"));
+        Debug.Log("Typewriter started: " + dialogue);
 
         Textline.color = Textline.color;
-        string dialogueText = Line.GetString("Dialogue");
-        Textline.text += dialogueText;
+        Textline.text += dialogue;
         Textline.ForceMeshUpdate();
 
         int totalCharacters = Textline.textInfo.characterCount;
-        float duration = Line.GetFloat("Duration");
-        float delay = duration / dialogueText.Length;
+        float delay = duration / dialogue.Length;
         Debug.Log("Total Characters: " + totalCharacters);
         Debug.Log("Delay: " + delay);
 
         Textline.maxVisibleCharacters = 0;
 
-        for (int i = 0; i < dialogueText.Length && ContinueToBuild; i++)
+        for (int i = 0; i < dialogue.Length; i++)
         {
+            if (ContinueToBuild == false) break;
             Textline.maxVisibleCharacters = i + 1;
             Debug.Log("Visible Characters: " + Textline.maxVisibleCharacters);
             yield return new WaitForSeconds(delay);
@@ -97,20 +91,19 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
         Debug.Log("Typewriter completed.");
     }
 
-    private IEnumerator BuildFade(GSC_ContainerUnit Line)
+    private IEnumerator BuildFade(string dialogue, float duration, bool append)
     {
         IsBuilding = true;
         ContinueToBuild = true;
 
-        if (Line.GetBoolean("Append") == false)
+        if (append == false)
         {
             Textline.text = string.Empty;
             Textline.ForceMeshUpdate();
         }
 
         PreTextLength = Textline.textInfo.characterCount;
-        string Text = Line.GetString("Dialogue");
-        Textline.text += Text;
+        Textline.text += dialogue;
         Textline.ForceMeshUpdate();
 
         var info = Textline.textInfo;
@@ -128,10 +121,10 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
         int minRange = PreTextLength;
         int maxRange = minRange + 1;
         float totalCharacters = info.characterCount - PreTextLength;
-        float totalDuration = Line.GetFloat("Duration");
+        
 
         float[] Alphas = new float[info.characterCount];
-        float FadeSpeed = 255f / totalDuration;
+        float FadeSpeed = 255f / duration;
 
         Debug.Log("Total Characters: " + totalCharacters);
         Debug.Log("Fade Speed: " + FadeSpeed);
@@ -154,10 +147,11 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
 
             Textline.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
 
+            
             if (Alphas[maxRange - 1] > alphaThreshold || !info.characterInfo[maxRange - 1].isVisible)
             {
                 if (maxRange < info.characterCount) maxRange++;
-                else ContinueToBuild = false;
+                else if(minRange == maxRange && Alphas[maxRange - 1] >= 255f) ContinueToBuild = false;
             }
 
             yield return null;
@@ -172,6 +166,9 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
     {
         Textline.text = string.Empty;
     }
+
+    public void CompleteDialogue() => ContinueToBuild = false;
+    
 }
     
 

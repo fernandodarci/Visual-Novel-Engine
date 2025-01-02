@@ -10,6 +10,9 @@ public class GSC_CanvasGroupController : MonoBehaviour
 
     public bool IsVisible => _CanvasGroup != null && Mathf.Approximately(_CanvasGroup.alpha, 1.0f);
 
+    public float Height => GetComponent<RectTransform>().sizeDelta.y;
+    public float Width => GetComponent<RectTransform>().sizeDelta.x;
+
     public bool IsRunning { get; private set; }
 
     private void Awake()

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7bbe683cd24e9a40ad075425177db3a, type: 3}
+  m_Name: StoryAssets
+  m_EditorClassIdentifier: 
+  _sprites:
+  - {fileID: 11400000, guid: 15eb813abdaf4854aa1fe1db6bc1d994, type: 2}
+  _textures: []
+  _materials: []
+  _fonts: []
+  _gameObjects: []
+  _scriptableObjects: []
+  _textAssets: []
+  _audioClips:
+  - {fileID: 11400000, guid: b61a787f6b875ea42906a97d9e886d10, type: 2}
+  _videoClips: []

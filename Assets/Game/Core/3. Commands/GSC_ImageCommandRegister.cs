@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections;
+using UnityEngine;
+
+public class GSC_ImageCommandRegister : GSC_CommandRegister
+{
+    public new static void AddCommands(GSC_CommandDatabase command)
+    {
+        command.AddCommand("ShowImage", new Func<GSC_ContainerUnit, IEnumerator>(ShowImage))
+            .With(GSC_IntegerParameter.WithRangeMin("Layer",0))
+            .With(GSC_FloatParameter.WithRangeMin("Duration",0));
+    }
+
+    private static IEnumerator ShowImage(GSC_ContainerUnit unit)
+    {
+        Sprite sprite;
+        if (unit is GSC_ContainerUnit<Sprite> @sprUnit)
+        {
+            sprite = sprUnit.Get();
+        }
+        else
+        {
+            sprite = Game.GetSprite(unit.GetString("SpriteGroup"), unit.GetString("SpriteName"));
+        }
+        GSC_ImageLayerController controller = Game.Controller(unit.GetString("Controller"));
+        if (!controller.IsVisible)
+        {
+            controller.HideAllLayers();
+            controller.Enable(false);
+        }
+
+        int layer = unit.HasInteger("Layer") ? unit.GetInteger("Layer") : 0;
+        yield return controller.ChangeSprite(layer, sprite, unit.GetFloat("Duration"));
+        if (unit.HasFloat("HideAfter") && unit.GetFloat("HideAfter") > 0f)
+        {
+            yield return Game.WaitForSeconds(unit.GetFloat("HideAfter"));
+            yield return controller.FadeOut(unit.GetFloat("Duration"));
+        }
+        Script.Ends();
+    }
+
+    
+}

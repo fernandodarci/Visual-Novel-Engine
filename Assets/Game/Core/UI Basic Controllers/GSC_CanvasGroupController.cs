@@ -64,6 +64,7 @@ public class GSC_CanvasGroupController : MonoBehaviour
         }
 
         SetAlpha(targetAlpha);
+        IsRunning = false;
     }
 
     public IEnumerator FadeIn(float duration, Func<bool> requestToEnd = null) => Fade(1f, duration);

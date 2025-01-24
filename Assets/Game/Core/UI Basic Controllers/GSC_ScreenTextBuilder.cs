@@ -50,7 +50,7 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
     private void OnComplete()
     {
         Textline.color = Textline.color;
-        Textline.maxVisibleCharacters = Textline.textInfo.characterCount;
+        Textline.maxVisibleCharacters = int.MaxValue;
         Textline.ForceMeshUpdate();
         IsBuilding = false;
     }

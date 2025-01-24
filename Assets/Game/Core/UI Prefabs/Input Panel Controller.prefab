@@ -368,11 +368,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 762dd0f79f2f4f948bce2ef9a4e3e3a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image: {fileID: 5538065874896230368}
-  Panel: {fileID: 3798953111206370933}
-  DescriptorBackground: {fileID: 8659081607722075199}
+  DialogueBackground: {fileID: 408656362693641092}
+  DialogueText: {fileID: 7055174919447222023}
   Separator: {fileID: 3606830231768969259}
-  Descriptor: {fileID: 7055174919447222023}
   Input: {fileID: 1135915343436229819}
 --- !u!114 &5538065874896230368
 MonoBehaviour:

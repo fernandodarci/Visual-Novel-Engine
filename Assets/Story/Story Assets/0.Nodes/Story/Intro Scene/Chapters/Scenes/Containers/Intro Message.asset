@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 415184e09ccc2df40ae7ff9b23a0cc8d, type: 3}
+  m_Name: Intro Message
+  m_EditorClassIdentifier: 
+  Message: This is a work of fiction. Any resemblance to real persons, living or
+    dead, is purely coincidental. This content contains explicit material, including
+    depictions of sexual activity, nudity, violence, and other intense or potentially
+    disturbing themes. \nViewer discretion is strongly advised. \nAll characters
+    depicted are fictional, over the legal age, and engage in consensual acts. No
+    real beings, animals, or digital figures were harmed during the creation of this
+    story. The creators do not condone or endorse any harmful behavior depicted,
+    and this content is intended solely for mature audiences and entertainment purposes.
+    \n\nBy continuing, you confirm that you have read and understood the above, are
+    of legal age to consume this material, and accept full responsibility for compliance
+    with the laws of your country or jurisdiction.
+  Append: 0
+  Duration: 3
+  FadeTime: 2
+  WaitToComplete: 1

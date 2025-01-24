@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
         {
             GSC_ImageController image = Instantiate(ImagePrefab,this.transform);
             image.name = $"Layer [{layer}]";
+            image.Disable();
             OrderLayers();
             Layers[layer] = image;
         }
@@ -51,7 +53,10 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
         foreach(int layer in Layers.Keys) RemoveLayer(layer);
         Layers.Clear();
     }
-
+    public void HideAllLayers()
+    {
+        foreach (int layer in Layers.Keys) Layers[layer].Disable();
+    }
     public void SetSprite(int layer, Sprite sprite)
     {
         if (Layers.TryGetValue(layer, out GSC_ImageController value))
@@ -102,10 +107,12 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
 
     public IEnumerator ChangeSprite(int layer, Sprite sprite, float duration)
     {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
+        if (!Layers.TryGetValue(layer, out GSC_ImageController value))
         {
-            yield return value.ChangeSprite(sprite, duration);
+            AddLayer(layer);
+            value = Layers[layer];
         }
+        yield return value.ChangeSprite(sprite, duration);
     }
 
     public IEnumerator ChangeColor(int layer, Color color, float duration)
@@ -155,5 +162,7 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
             yield return value.SmoothMove(targetPosition, duration);
         }
     }
+
+    
 }
 

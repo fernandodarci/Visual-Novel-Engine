@@ -9,10 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2870c36f9f5b78488c4c0ad58cf6c59, type: 3}
-  m_Name: Chapter
+  m_Script: {fileID: 11500000, guid: 796db3ef1101e2a4391275c57c249a66, type: 3}
+  m_Name: Scene 01
   m_EditorClassIdentifier: 
-  ChapterTitle: 
-  ChapterSubtitle: 
-  Scenes:
-  - {fileID: 11400000, guid: 2133a6eada826f945ba6b608cbe6cdad, type: 2}
+  SceneContainers:
+  - {fileID: 11400000, guid: 56e50849b16d8184b91dad64d1d4f73d, type: 2}

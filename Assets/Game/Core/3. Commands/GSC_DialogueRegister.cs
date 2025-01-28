@@ -51,8 +51,8 @@ public class GSC_DialogueRegister : GSC_CommandRegister
             if (unit.HasBoolean("WaitToComplete"))
             {
                 yield return Game.WaitForComplete();
-                yield return message.HideDialogue(unit.GetFloat("Fade"));
             }
+            yield return message.HideDialogue(unit.GetFloat("Fade"));
         }
         Script.Ends();
     }

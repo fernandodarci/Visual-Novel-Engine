@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796db3ef1101e2a4391275c57c249a66, type: 3}
-  m_Name: Scene 01
+  m_Script: {fileID: 11500000, guid: d814b504ef0b1a94bb6999445cfb55ea, type: 3}
+  m_Name: Main Story
   m_EditorClassIdentifier: 
-  SceneContainers:
-  - {fileID: 0}
+  Chapters:
+  - {fileID: 11400000, guid: 81c6676ec2a58104482cc086c6cb0d32, type: 2}

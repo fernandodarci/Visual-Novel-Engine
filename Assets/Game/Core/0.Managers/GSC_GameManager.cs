@@ -170,8 +170,14 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         MainMenu.Enable(true);
         while(MainMenu.IsClicked == false) yield return null;
         MainMenu.ResetClick();
+        Components.DisableAll();
         yield return MainMenu.FadeOut(fadetime);
         MainMenu.Disable();
+    }
+
+    internal bool Callback()
+    {
+        throw new NotImplementedException();
     }
     #endregion
 }

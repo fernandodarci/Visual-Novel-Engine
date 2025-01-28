@@ -18,6 +18,7 @@ public class GSC_FullMessageContainerModule : GSC_ScriptContainer
         unit.Set("Append", Append);
         unit.Set("Duration", Duration);
         unit.Set("Fade", FadeTime);
+        if(WaitToComplete)
         unit.Set("WaitToComplete", WaitToComplete);
 
         return unit;

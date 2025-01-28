@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Story Units/Scene Unit")]
 public class GSC_SceneUnit : ScriptableObject
 {
-    [SerializeField] public List<GSC_ScriptContainer> SceneContainers;
+    [SerializeField] private List<GSC_ScriptContainer> SceneContainers;
     
     public List<GSC_ContainerUnit> GetContainers()
     {

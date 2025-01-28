@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d814b504ef0b1a94bb6999445cfb55ea, type: 3}
-  m_Name: Premain
+  m_Script: {fileID: 11500000, guid: e2870c36f9f5b78488c4c0ad58cf6c59, type: 3}
+  m_Name: Intro Chapter
   m_EditorClassIdentifier: 
-  Chapters:
-  - {fileID: 11400000, guid: 873b043421aaf4a45912a9899cc6fb89, type: 2}
+  ChapterTitle: 
+  ChapterSubtitle: 
+  Scenes:
+  - {fileID: 11400000, guid: 2133a6eada826f945ba6b608cbe6cdad, type: 2}

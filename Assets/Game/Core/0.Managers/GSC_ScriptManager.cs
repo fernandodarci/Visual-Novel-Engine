@@ -8,10 +8,10 @@ using UnityEngine;
 public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
 {
     private GSC_CommandDatabase Command;
-    [SerializeField] private GSC_StoryUnit Story;
     private bool IsGamePaused;
     private Queue<GSC_ContainerUnit> Coroutines = new Queue<GSC_ContainerUnit>();
     private GSC_CommandHandler CurrentHandler;
+    private GSC_StoryUnit Story;
     public bool RequestToTerminate { get; private set; }
     private bool _alreadyRunning;
     private bool RequestToWipe;
@@ -64,8 +64,10 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
 
     public void RunStory(GSC_StoryUnit unit, int chapterIndex, int sceneIndex)
     {
+        Story = unit;
         Debug.Log("Start to run the story");
         Coroutines.Clear();
+        Wipe();
 
         for (int i = chapterIndex; i < Story.Chapters.Count; i++)
         {

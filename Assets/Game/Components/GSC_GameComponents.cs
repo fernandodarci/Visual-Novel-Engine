@@ -58,6 +58,16 @@ public class GSC_GameComponents : MonoBehaviour
             return scr.Controller;
         }
     }
-   
+
+    public void DisableAll()
+    {
+        InputPanel.Disable();
+        DialogueController.Disable();
+        ChoicePanel.Disable();
+        if(ScreenMessages.Count > 0)
+        {
+            foreach(var msg in ScreenMessages) msg.Controller.Disable();
+        }
+    }
 }
 

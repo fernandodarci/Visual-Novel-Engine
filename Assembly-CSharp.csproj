@@ -63,14 +63,15 @@
   <ItemGroup>
     <Compile Include="Assets\Story\Scripts\GSC_CharactersList.cs" />
     <Compile Include="Assets\Game\Core\UI Basic Controllers\GSC_InputHandler.cs" />
+    <Compile Include="Assets\Game\[Menu Scripts]\GSC_GalleryMenuController.cs" />
     <Compile Include="Assets\Game\Core\1.Parameters\GSC_BooleanParameter.cs" />
     <Compile Include="Assets\Game\Core\1.Parameters\GSC_Parameter.cs" />
     <Compile Include="Assets\Game\Core\2.Containers\Story Containers\Script Container Variants\GSC_ShowImageContainerModule.cs" />
+    <Compile Include="Assets\Game\Core\2.Containers\Story Containers\Script Container Variants\GSC_ShowImagesContainerModule.cs" />
     <Compile Include="Assets\Game\Core\UI Basic Controllers\GSC_ButtonCaption.cs" />
     <Compile Include="Assets\Game\Core\Providers\GSC_GameObjectProvider.cs" />
     <Compile Include="Assets\Game\Core\1.Parameters\GSC_FloatParameter.cs" />
     <Compile Include="Assets\Game\Core\2.Containers\Story Containers\GSC_ChapterUnit.cs" />
-    <Compile Include="Assets\Game\Components\GSC_MainMenuController.cs" />
     <Compile Include="Assets\Game\Core\1.Parameters\GSC_IntegerParameter.cs" />
     <Compile Include="Assets\Game\Core\Utils\GSC_SystemInfo.cs" />
     <Compile Include="Assets\Story\Scripts\GSC_GameAssets.cs" />
@@ -98,10 +99,12 @@
     <Compile Include="Assets\Game\Core\1.Parameters\GSC_StringParameter.cs" />
     <Compile Include="Assets\Game\Core\Providers\GSC_TextureProvider.cs" />
     <Compile Include="Assets\Game\Components\GSC_ChoicePanelController.cs" />
+    <Compile Include="Assets\Game\[Menu Scripts]\GSC_MainMenuController.cs" />
     <Compile Include="Assets\Game\Core\2.Containers\GSC_AudioSource.cs" />
     <Compile Include="Assets\Game\Core\Providers\GSC_SpriteProvider.cs" />
     <Compile Include="Assets\Game\Core\UI Basic Controllers\GSC_ScreenTextBuilder.cs" />
     <Compile Include="Assets\Game\Core\3. Commands\GSC_ImageCommandRegister.cs" />
+    <Compile Include="Assets\Game\Core\2.Containers\GSC_SpriteLayer.cs" />
     <Compile Include="Assets\Game\Core\3. Commands\GSC_DialogueRegister.cs" />
     <Compile Include="Assets\Game\Core\2.Containers\GSC_CommandHandler.cs" />
     <Compile Include="Assets\Story\Scripts\GSC_StoryScript.cs" />

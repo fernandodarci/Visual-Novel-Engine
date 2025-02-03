@@ -9,11 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 415184e09ccc2df40ae7ff9b23a0cc8d, type: 3}
-  m_Name: Dialogue Scene 02
+  m_Script: {fileID: 11500000, guid: 37db418816faa544b9d8ff7cf6025e58, type: 3}
+  m_Name: Image - Scene 01
   m_EditorClassIdentifier: 
-  Message: 
-  Append: 0
-  Duration: 2
+  Frame: {fileID: 21300000, guid: e97e731d744f7ac499dad92720beb7e6, type: 3}
+  ControllerName: 0
+  Layer: 1
   FadeTime: 2
-  WaitToComplete: 0
+  HideAfterTime: 2

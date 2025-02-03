@@ -16,6 +16,9 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
     private bool _alreadyRunning;
     private bool RequestToWipe;
     private bool EndCoroutine;
+    private Coroutine storyRunner;
+    private bool ToNextScene;
+
     public bool IsExecuting { get; internal set; }
 
     public void InitializeScriptHandling()
@@ -62,8 +65,15 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         
     }
 
-    public void RunStory(GSC_StoryUnit unit, int chapterIndex, int sceneIndex)
+    public void RunSequence(GSC_StoryUnit unit, int chapterIndex, int sceneIndex)
     {
+        if(storyRunner != null) StopCoroutine(storyRunner);
+        ToNextScene = true;
+        storyRunner = StartCoroutine(RunSequenceCoroutine(unit, chapterIndex, sceneIndex));
+    }
+
+    private IEnumerator RunSequenceCoroutine(GSC_StoryUnit unit, int chapterIndex, int sceneIndex)
+    { 
         Story = unit;
         Debug.Log("Start to run the story");
         Coroutines.Clear();
@@ -77,12 +87,14 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
             for (int j = startSceneIndex; j < chapter.Scenes.Count; j++)
             {
                 var scene = chapter.Scenes[j];
-
+                
                 foreach (var container in scene.GetContainers())
                 {
                     Debug.Log($"Enqueue coroutine {container.Calling} in script. [{Coroutines.Count}]");
                     Coroutines.Enqueue(container);
                 }
+                while (ToNextScene == false) yield return null;
+                ToNextScene = false;
             }
         }
         Coroutines.Enqueue(GSC_MainMenuController.MainMenu);
@@ -95,6 +107,7 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
             if ((Coroutines.Count == 0 && CurrentHandler == null) || IsGamePaused)
             {
                 IsExecuting = false;
+                ToNextScene = true;
                 yield return null;
             }
             else

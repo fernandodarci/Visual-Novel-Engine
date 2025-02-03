@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796db3ef1101e2a4391275c57c249a66, type: 3}
-  m_Name: Scene 01
+  m_Script: {fileID: 11500000, guid: 37db418816faa544b9d8ff7cf6025e58, type: 3}
+  m_Name: Image - Scene 09
   m_EditorClassIdentifier: 
-  SceneContainers:
-  - {fileID: 11400000, guid: 7ab6a0f1329d56246b21cfa54f8bec8a, type: 2}
+  Frame: {fileID: 21300000, guid: 1535223ee05e279458b4007824979a78, type: 3}
+  ControllerName: 0
+  Layer: 1
+  FadeTime: 2
+  HideAfterTime: 2

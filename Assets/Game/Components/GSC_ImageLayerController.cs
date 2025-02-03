@@ -7,7 +7,9 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
 {
     [SerializeField] private GSC_ImageController ImagePrefab;
     private Dictionary<int, GSC_ImageController> Layers = new Dictionary<int, GSC_ImageController>();
-   
+    private List<GSC_ImageController> LayersListed = new List<GSC_ImageController>();
+    private bool RequestToComplete;
+
     private void OrderLayers()
     {
         foreach(int layer in Layers.Keys)
@@ -114,6 +116,55 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
         }
         yield return value.ChangeSprite(sprite, duration);
     }
+    
+    public IEnumerator ChangeSprites(GSC_SpriteLayer[] sprites, float fadeTime)
+    {
+        if (sprites != null && sprites.Length > 0)
+        {
+            foreach(var spr in sprites)
+            {
+                if(spr != null && !Layers.TryGetValue(spr.Layer, out GSC_ImageController value))
+                {
+                    AddLayer(spr.Layer);
+                    value = Layers[spr.Layer];
+                    value.Disable();
+                    value.SetSprite(spr.sprite);
+                }
+            }
+            yield return ShowAllLayersListed(fadeTime);
+        }
+    }
+
+    private IEnumerator ShowAllLayersListed(float FadeTime)
+    {
+        if(LayersListed.Count > 0)
+        {
+            float elapsedTime = 0f;
+
+            while (elapsedTime < FadeTime)
+            {
+                if (RequestToComplete)
+                {
+                    RequestToComplete = false;
+                    break;
+                }
+                
+                foreach(var layer in LayersListed)
+                {
+                    layer.SetAlpha(Mathf.Lerp(0f, 1f, elapsedTime / FadeTime));
+                }
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+           
+            foreach(var layer in LayersListed)
+            {
+                layer.Enable(false);
+            }
+            
+            LayersListed.Clear();
+        }
+    }
 
     public IEnumerator ChangeColor(int layer, Color color, float duration)
     {
@@ -163,6 +214,6 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
         }
     }
 
-    
+   
 }
 

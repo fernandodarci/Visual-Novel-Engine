@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796db3ef1101e2a4391275c57c249a66, type: 3}
-  m_Name: Scene 01
+  m_Script: {fileID: 11500000, guid: 5800f489bd805d544b293cadc0cbb102, type: 3}
+  m_Name: Dialogue Scene 10
   m_EditorClassIdentifier: 
-  SceneContainers:
-  - {fileID: 11400000, guid: 7ab6a0f1329d56246b21cfa54f8bec8a, type: 2}
+  CharacterName: Joe
+  Dialogue: 'Wow. Sure it is looks tasty. I will love a massage in the shower, if
+    you don''t care. '
+  Append: 0
+  Duration: 2
+  FadeTime: 2
+  WaitToComplete: 0

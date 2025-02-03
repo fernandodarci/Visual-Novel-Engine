@@ -17,7 +17,6 @@ public class GSC_GameComponents : MonoBehaviour
         public GSC_ScreenMessageController Controller;
     }
 
-    [SerializeField] private GSC_ScreenInput ScreenInputController;
     [SerializeField] private GSC_DialogueController DialogueController;
     [SerializeField] private GSC_InputPanelController InputPanelController;
     [SerializeField] private GSC_ChoicePanelController ChoicePanelController;
@@ -27,7 +26,6 @@ public class GSC_GameComponents : MonoBehaviour
     [Header("Screen Message Controllers")]
     [SerializeField] private List<GSC_ScreenMessageComponent> ScreenMessages;
     
-    public GSC_ScreenInput ScreenInput => ScreenInputController;
     public GSC_DialogueController Dialogue => DialogueController;
     public GSC_InputPanelController InputPanel => InputPanelController;
     public GSC_ChoicePanelController ChoicePanel => ChoicePanelController;

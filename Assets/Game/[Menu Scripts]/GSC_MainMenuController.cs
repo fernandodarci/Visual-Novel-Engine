@@ -37,13 +37,13 @@ public class GSC_MainMenuController : GSC_CanvasGroupController
 
     public void RunIntro()
     {
-        GSC_ScriptManager.Instance.RunStory(PreMain, 0, 0);
+        GSC_ScriptManager.Instance.RunSequence(PreMain, 0, 0);
     }
 
     private void OnStart()
     {
         IsClicked = true;
-        GSC_ScriptManager.Instance.RunStory(PostMain, 0, 0);
+        GSC_ScriptManager.Instance.RunSequence(PostMain, 0, 0);
     }
 
     private void OnLoad() { }
@@ -54,6 +54,6 @@ public class GSC_MainMenuController : GSC_CanvasGroupController
 
     public void LoadStoryFrom(int chapter = 0, int scene = 0)
     {
-        GSC_ScriptManager.Instance.RunStory(PostMain, chapter, scene);
+        GSC_ScriptManager.Instance.RunSequence(PostMain, chapter, scene);
     }
 }

@@ -63,11 +63,12 @@ public class GSC_DialogueRegister : GSC_CommandRegister
         GSC_ScreenMessageController controller = Game.GetMessageController("Dialogue");
         if (controller != null && controller is GSC_DialogueController dialogueController)
         {
-            Game.EnableScreenInput();
-            yield return dialogueController.ShowDialoguePanel(unit.GetFloat("Fade"));
             if (unit is GSC_ContainerUnit<Color> colorUnit)
                 dialogueController.ChangeCharacterNameColor(colorUnit.Get());
-                dialogueController.ChangeCharacterName(unit.GetString("Character"));
+            dialogueController.ChangeCharacterName(unit.GetString("Character"));
+
+            Game.EnableScreenInput();
+            yield return dialogueController.ShowDialoguePanel(unit.GetFloat("Fade"));
             string dialogue = unit.GetString("Dialogue");
             float textTime = unit.GetFloat("Duration");
             bool append = unit.GetBoolean("Append");
@@ -76,7 +77,9 @@ public class GSC_DialogueRegister : GSC_CommandRegister
             {
                 yield return Game.WaitForComplete();
                 controller.ClearText();
+                yield return controller.FadeOut(unit.GetFloat("Fade"));
             }
+
         }
         Script.Ends();
     }

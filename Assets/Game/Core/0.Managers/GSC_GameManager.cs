@@ -7,21 +7,22 @@ using UnityEngine;
 public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 {
     [SerializeField] private GSC_StoryData StoryData;
+    [SerializeField] private GSC_ScreenInput ScreenInput;
     [SerializeField] private GSC_GameComponents Components;
     [Header("Menus")]
     [SerializeField] private GSC_MainMenuController MainMenu;
     [SerializeField] private List<GSC_CanvasGroupController> Menus;
-    
+
     private GSC_GameData Data;
     private GSC_ScreenMessageController Alert;
     private GSC_ScreenMessageController CurrentController;
 
     public bool InputRequested { get; private set; }
-   
+
     public void RequestInput() => InputRequested = false;
     private void OnInput()
     {
-        if(CurrentController != null && CurrentController.IsBuilding)
+        if (CurrentController != null && CurrentController.IsBuilding)
         {
             CurrentController.CompleteDialogue();
         }
@@ -38,7 +39,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         Data = new GSC_GameData();
         Data.Initialize();
         Alert = Components.GetController("Alert");
-        Components.ScreenInput.RegisterEvent(OnInput, OnInput);
+        ScreenInput.RegisterEvent(OnInput, OnInput);
         GSC_ScriptManager.Instance.InitializeScriptHandling();
         MainMenu.RunIntro();
     }
@@ -49,7 +50,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         CurrentController = Components.GetController(messageType);
         return CurrentController;
     }
-    
+
     public GSC_ImageLayerController Controller(string controllerName)
     {
         return controllerName switch
@@ -63,16 +64,16 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
     public void DisableScreenInput()
     {
-        Components.ScreenInput.Disable();
+        ScreenInput.Disable();
         Alert.Disable();
     }
-    
+
     public void EnableScreenInput()
     {
-        Components.ScreenInput.Enable(true);
+        ScreenInput.Enable(true);
         Alert.Enable(true);
     }
-    
+
     public void HandleInput(bool toSystem)
         => Data.Set(Components.InputPanel.Parameter, toSystem);
     public void HandleChoice(bool toSystem)
@@ -80,7 +81,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
     public Sprite GetSprite(string group, string spriteName)
         => StoryData.GetSprite(group, spriteName);
-    
+
     //This will process string from the game database.
     public string ProcessString(string text)
     {
@@ -92,7 +93,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
         for (int i = 0; i < groups.Count; i++)
         {
-            string value = Data.GetAsString(groups[i].Value[2..^2],true);
+            string value = Data.GetAsString(groups[i].Value[2..^2], true);
             text.Replace(groups[i].Value, value);
         }
 
@@ -100,7 +101,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
         for (int i = 0; i < groups.Count; i++)
         {
-            string value = Data.GetAsString(groups[i].Value[2..^2],false);
+            string value = Data.GetAsString(groups[i].Value[2..^2], false);
             text.Replace(groups[i].Value, value);
         }
 
@@ -137,7 +138,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
             {
                 yield break;
             }
-            else 
+            else
             {
                 elapsedTime += Time.deltaTime;
             }
@@ -155,9 +156,9 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         if (chapterParameter is GSC_IntegerParameter @chapter)
         {
             GSC_Parameter sceneParameter = save.Database.Get("SceneIndex");
-            if(sceneParameter is GSC_IntegerParameter @scene)
+            if (sceneParameter is GSC_IntegerParameter @scene)
             {
-                MainMenu.LoadStoryFrom(chapter.Value,scene.Value);
+                MainMenu.LoadStoryFrom(chapter.Value, scene.Value);
             }
         }
     }
@@ -168,16 +169,12 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         DisableScreenInput();
         yield return MainMenu.FadeIn(fadetime);
         MainMenu.Enable(true);
-        while(MainMenu.IsClicked == false) yield return null;
+        while (MainMenu.IsClicked == false) yield return null;
         MainMenu.ResetClick();
         Components.DisableAll();
         yield return MainMenu.FadeOut(fadetime);
         MainMenu.Disable();
     }
 
-    internal bool Callback()
-    {
-        throw new NotImplementedException();
-    }
     #endregion
 }

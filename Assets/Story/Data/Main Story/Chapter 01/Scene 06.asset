@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 796db3ef1101e2a4391275c57c249a66, type: 3}
-  m_Name: Scene 01
+  m_Name: Scene 06
   m_EditorClassIdentifier: 
   SceneContainers:
-  - {fileID: 11400000, guid: 7ab6a0f1329d56246b21cfa54f8bec8a, type: 2}
+  - {fileID: 11400000, guid: 376b5373c2252474992ecc25534d3648, type: 2}
+  - {fileID: 11400000, guid: 5a0f2d00f69b68d4db19aaed7c29b87f, type: 2}

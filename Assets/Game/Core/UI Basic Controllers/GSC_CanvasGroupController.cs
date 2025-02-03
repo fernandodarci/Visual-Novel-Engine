@@ -7,6 +7,7 @@ using UnityEngine;
 public class GSC_CanvasGroupController : MonoBehaviour
 {
     private CanvasGroup _CanvasGroup;
+    private bool requestToComplete;
 
     public bool IsVisible => _CanvasGroup != null && Mathf.Approximately(_CanvasGroup.alpha, 1.0f);
 
@@ -56,6 +57,11 @@ public class GSC_CanvasGroupController : MonoBehaviour
 
         while (elapsedTime < duration)
         {
+            if(requestToComplete == true)
+            {
+                requestToComplete = false;
+                break;
+            }
             elapsedTime += Time.deltaTime;
             float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / duration);
             SetAlpha(newAlpha);
@@ -75,6 +81,11 @@ public class GSC_CanvasGroupController : MonoBehaviour
     {
         if (_CanvasGroup != null) InitializeCanvasGroup();
         _CanvasGroup.alpha = alpha;
+    }
+
+    public void Complete()
+    {
+        requestToComplete = true;
     }
 
     #endregion

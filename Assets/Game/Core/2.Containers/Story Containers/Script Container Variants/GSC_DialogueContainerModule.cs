@@ -15,7 +15,7 @@ public class GSC_DialogueContainerModule : GSC_ScriptContainer
         GSC_ContainerUnit unit = new("ShowDialogue");
 
         unit.Set("Character", CharacterName);
-        unit.Set("Message", Dialogue);
+        unit.Set("Dialogue", Dialogue);
         unit.Set("Append", Append);
         unit.Set("Duration", Duration);
         unit.Set("Fade", FadeTime);

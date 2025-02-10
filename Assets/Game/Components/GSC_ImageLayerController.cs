@@ -3,16 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GSC_ImageLayerController : GSC_CanvasGroupController
+public class GSC_ImageLayerController : MonoBehaviour
 {
-    [SerializeField] private GSC_ImageController ImagePrefab;
-    private Dictionary<int, GSC_ImageController> Layers = new Dictionary<int, GSC_ImageController>();
-    private List<GSC_ImageController> LayersListed = new List<GSC_ImageController>();
+    [SerializeField] private GSC_GraphicLayer ImagePrefab;
+    private Dictionary<int, GSC_GraphicLayer> Layers = new Dictionary<int, GSC_GraphicLayer>();
     private bool RequestToComplete;
+
+    private List<GSC_GraphicLayer> LayersToChange = new List<GSC_GraphicLayer>();
+
+    #region Layer Management
 
     private void OrderLayers()
     {
-        foreach(int layer in Layers.Keys)
+        foreach (int layer in Layers.Keys)
         {
             Layers[layer].GetComponent<RectTransform>().SetSiblingIndex(layer);
         }
@@ -22,9 +25,10 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
     {
         if (!Layers.ContainsKey(layer))
         {
-            GSC_ImageController image = Instantiate(ImagePrefab,this.transform);
+            GSC_GraphicLayer image = Instantiate(ImagePrefab, this.transform);
             image.name = $"Layer [{layer}]";
-            image.Disable();
+            image.Initialize();
+            image.Hide();
             OrderLayers();
             Layers[layer] = image;
         }
@@ -52,16 +56,31 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
 
     public void RemoveAll()
     {
-        foreach(int layer in Layers.Keys) RemoveLayer(layer);
-        Layers.Clear();
+        if (Layers.Count > 0)
+        {
+            foreach (var layer in Layers.Keys)
+            {
+                Destroy(Layers[layer].gameObject);
+            }
+            Layers.Clear();
+        }
     }
+
     public void HideAllLayers()
     {
-        foreach (int layer in Layers.Keys) Layers[layer].Disable();
+        if (Layers.Count > 0)
+        {
+            foreach (int layer in Layers.Keys) Layers[layer].Hide();
+        }
     }
+
+    #endregion
+
+    #region Layer Operations
+    
     public void SetSprite(int layer, Sprite sprite)
     {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
+        if (Layers.TryGetValue(layer, out GSC_GraphicLayer value))
         {
             value.SetSprite(sprite);
         }
@@ -69,7 +88,7 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
 
     public void SetColor(int layer, Color color)
     {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
+        if (Layers.TryGetValue(layer, out GSC_GraphicLayer value))
         {
             value.SetColor(color);
         }
@@ -77,143 +96,70 @@ public class GSC_ImageLayerController : GSC_CanvasGroupController
 
     public void SetMaterial(int layer, Material material)
     {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
+        if (Layers.TryGetValue(layer, out GSC_GraphicLayer value))
         {
             value.SetMaterial(material);
         }
     }
-
-    public void ToggleHighlight(int layer)
-    {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
-        {
-            value.ToggleHighlight();
-        }
-    }
-
-    public void Move(int layer, Vector2 position)
-    {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
-        {
-            value.Move(position);
-        }
-    }
-
-    public void Flip()
-    {
-        foreach (var layer in Layers.Values)
-        {
-            layer.Flip();
-        }
-    }
+    
+    #endregion
 
     public IEnumerator ChangeSprite(int layer, Sprite sprite, float duration)
     {
-        if (!Layers.TryGetValue(layer, out GSC_ImageController value))
+        if (Layers.TryGetValue(layer, out GSC_GraphicLayer value))
         {
-            AddLayer(layer);
-            value = Layers[layer];
+            yield return value.SmoothChangeSprite(sprite, duration);
         }
-        yield return value.ChangeSprite(sprite, duration);
     }
-    
-    public IEnumerator ChangeSprites(GSC_SpriteLayer[] sprites, float fadeTime)
+
+    public IEnumerator ChangeSprites(GSC_SpriteLayer[] layers, float duration)
     {
-        if (sprites != null && sprites.Length > 0)
+        foreach(GSC_SpriteLayer sprlayer in layers)
         {
-            foreach(var spr in sprites)
+            if(!Layers.TryGetValue(sprlayer.Layer, out GSC_GraphicLayer value))
             {
-                if(spr != null && !Layers.TryGetValue(spr.Layer, out GSC_ImageController value))
-                {
-                    AddLayer(spr.Layer);
-                    value = Layers[spr.Layer];
-                    value.Disable();
-                    value.SetSprite(spr.sprite);
-                }
+                AddLayer(sprlayer.Layer);
+                value = Layers[sprlayer.Layer];
             }
-            yield return ShowAllLayersListed(fadeTime);
+         
+            LayersToChange.Add(value);
+            value.StartTransition(sprlayer.Sprite);
         }
-    }
 
-    private IEnumerator ShowAllLayersListed(float FadeTime)
-    {
-        if(LayersListed.Count > 0)
+        float elapsed = 0f;
+
+        while (elapsed < duration)
         {
-            float elapsedTime = 0f;
-
-            while (elapsedTime < FadeTime)
+            foreach (GSC_GraphicLayer layer in LayersToChange)
             {
-                if (RequestToComplete)
-                {
-                    RequestToComplete = false;
-                    break;
-                }
-                
-                foreach(var layer in LayersListed)
-                {
-                    layer.SetAlpha(Mathf.Lerp(0f, 1f, elapsedTime / FadeTime));
-                }
-                elapsedTime += Time.deltaTime;
-                yield return null;
+                layer.SmoothChangeSpriteStep(elapsed / duration);
             }
-           
-            foreach(var layer in LayersListed)
-            {
-                layer.Enable(false);
-            }
-            
-            LayersListed.Clear();
+            elapsed += Time.deltaTime;
+            yield return null;
         }
-    }
 
+        foreach (GSC_GraphicLayer layer in LayersToChange)
+        {
+            layer.EndTransition();
+        }
+       
+        LayersToChange.Clear();
+    }
+        
     public IEnumerator ChangeColor(int layer, Color color, float duration)
     {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
+        if (Layers.TryGetValue(layer, out GSC_GraphicLayer value))
         {
-            yield return value.ChangeColor(color, duration);
+            yield return value.SmoothChangeColor(color, duration);
         }
     }
 
-    public IEnumerator SmoothFlip(int layer, float duration)
+    public IEnumerator HideLayer(int layer, float duration)
     {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
+        if(Layers.TryGetValue(layer, out GSC_GraphicLayer value))
         {
-            yield return value.SmoothFlip(duration);
+            yield return value.FadeOut(duration);
         }
     }
-
-    public IEnumerator Moves(int layer, Vector2 position, float duration)
-    {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
-        {
-            yield return value.Moves(position, duration);
-        }
-    }
-
-    public IEnumerator Highlight(int layer, float duration)
-    {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
-        {
-            yield return value.Highlight(duration);
-        }
-    }
-
-    public IEnumerator Unhighlight(int layer, float duration)
-    {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
-        {
-            yield return value.Unhighlight(duration);
-        }
-    }
-
-    public IEnumerator SmoothMove(int layer, Vector2 targetPosition, float duration)
-    {
-        if (Layers.TryGetValue(layer, out GSC_ImageController value))
-        {
-            yield return value.SmoothMove(targetPosition, duration);
-        }
-    }
-
-   
 }
 

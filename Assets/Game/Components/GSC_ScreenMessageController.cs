@@ -14,7 +14,7 @@ public class GSC_ScreenMessageController : GSC_CanvasGroupController
     private void Start()
     {
         // Hide the dialogue panel by default
-        Disable();
+        Hide();
         ClearText();
     }
     

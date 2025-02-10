@@ -50,21 +50,21 @@ public class GSC_GameComponents : MonoBehaviour
             {
                 if (msg.Name != scr.Name)
                 {
-                    msg.Controller.Disable();
+                    msg.Controller.Hide();
                 }
             }
             return scr.Controller;
         }
     }
 
-    public void DisableAll()
+    public void HideAll()
     {
-        InputPanel.Disable();
-        DialogueController.Disable();
-        ChoicePanel.Disable();
+        InputPanel.Hide();
+        DialogueController.Hide();
+        ChoicePanel.Hide();
         if(ScreenMessages.Count > 0)
         {
-            foreach(var msg in ScreenMessages) msg.Controller.Disable();
+            foreach(var msg in ScreenMessages) msg.Controller.Hide();
         }
     }
 }

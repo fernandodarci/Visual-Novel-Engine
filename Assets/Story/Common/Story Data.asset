@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d83af31adcd964b932fa45fe324dc8, type: 3}
   m_Name: Story Data
   m_EditorClassIdentifier: 
-  StoryName: Omni
+  StoryName: The Eve Protocol
   Characters: {fileID: 11400000, guid: e31a9418bb5931543935ff555751b0d7, type: 2}
   Assets: {fileID: 11400000, guid: b5850942d5956c34aaf459ae999f9fdd, type: 2}

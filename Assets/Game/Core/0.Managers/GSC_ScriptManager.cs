@@ -72,23 +72,43 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         storyRunner = StartCoroutine(RunSequenceCoroutine(unit, chapterIndex, sceneIndex));
     }
 
+    public void RunScene(GSC_StoryUnit unit, int chapterIndex, int sceneIndex)
+    {
+        Story = unit;
+        if (chapterIndex < 0 || chapterIndex >= Story.Chapters.Count) return;
+        GSC_ChapterUnit chapter = Story.Chapters[chapterIndex];
+        if(sceneIndex < 0 || sceneIndex >= chapter.SceneList.Count) return;
+
+        Debug.Log("Run single scene");
+        Coroutines.Clear();
+        GSC_GameManager.Instance.ClearAllImages();
+        Wipe();
+
+        foreach (var container in chapter.GetScene(sceneIndex))
+        {
+            Debug.Log($"Enqueue coroutine {container.Calling} in script. [{Coroutines.Count}]");
+            Coroutines.Enqueue(container);
+        }
+
+    }
+
     private IEnumerator RunSequenceCoroutine(GSC_StoryUnit unit, int chapterIndex, int sceneIndex)
     { 
         Story = unit;
         Debug.Log("Start to run the story");
         Coroutines.Clear();
+        GSC_GameManager.Instance.ClearAllImages();
         Wipe();
 
-        for (int i = chapterIndex; i < Story.Chapters.Count; i++)
+        for (int i = 0; i < Story.Chapters.Count; i++)
         {
             var chapter = Story.Chapters[i];
-            int startSceneIndex = (i == chapterIndex) ? sceneIndex : 0;
+            int sceneCount = chapter.GetScenesOnChapter();
+            int startSceneIndex = 0;
 
-            for (int j = startSceneIndex; j < chapter.Scenes.Count; j++)
+            for (int j = startSceneIndex; j < sceneCount; j++)
             {
-                var scene = chapter.Scenes[j];
-                
-                foreach (var container in scene.GetContainers())
+                foreach (var container in chapter.GetScene(j))
                 {
                     Debug.Log($"Enqueue coroutine {container.Calling} in script. [{Coroutines.Count}]");
                     Coroutines.Enqueue(container);

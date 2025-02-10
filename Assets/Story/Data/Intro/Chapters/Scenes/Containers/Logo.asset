@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37db418816faa544b9d8ff7cf6025e58, type: 3}
   m_Name: Logo
   m_EditorClassIdentifier: 
-  Frame: {fileID: 21300000, guid: d2bfc329747567d4eae2f59737d62ce8, type: 3}
+  Frame: {fileID: 0}
+  Layer: 0
   ControllerName: 0
-  Layer: 1
   FadeTime: 2
-  HideAfterTime: 2
+  HideAfter: 0

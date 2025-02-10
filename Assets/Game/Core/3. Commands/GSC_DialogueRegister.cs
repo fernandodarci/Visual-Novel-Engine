@@ -48,7 +48,7 @@ public class GSC_DialogueRegister : GSC_CommandRegister
             bool append = unit.GetBoolean("Append");
             yield return message.ShowMessagePanel(unit.GetFloat("Fade"));
             yield return message.ShowMessage(dialogue, textTime, append);
-            if (unit.HasBoolean("WaitToComplete"))
+            if (unit.GetBoolean("WaitToComplete") == true)
             {
                 yield return Game.WaitForComplete();
             }
@@ -63,6 +63,7 @@ public class GSC_DialogueRegister : GSC_CommandRegister
         GSC_ScreenMessageController controller = Game.GetMessageController("Dialogue");
         if (controller != null && controller is GSC_DialogueController dialogueController)
         {
+            dialogueController.ClearText();
             if (unit is GSC_ContainerUnit<Color> colorUnit)
                 dialogueController.ChangeCharacterNameColor(colorUnit.Get());
             dialogueController.ChangeCharacterName(unit.GetString("Character"));
@@ -72,14 +73,13 @@ public class GSC_DialogueRegister : GSC_CommandRegister
             string dialogue = unit.GetString("Dialogue");
             float textTime = unit.GetFloat("Duration");
             bool append = unit.GetBoolean("Append");
-            yield return controller.ShowMessage(dialogue, textTime, append);
-            if (unit.HasBoolean("WaitToComplete"))
+            yield return dialogueController.ShowMessage(dialogue, textTime, append);
+            if (unit.GetBoolean("WaitToComplete") == true)
             {
                 yield return Game.WaitForComplete();
-                controller.ClearText();
-                yield return controller.FadeOut(unit.GetFloat("Fade"));
+                dialogueController.ClearText();
+                yield return dialogueController.FadeOut(unit.GetFloat("Fade"));
             }
-
         }
         Script.Ends();
     }
@@ -98,13 +98,13 @@ public class GSC_DialogueRegister : GSC_CommandRegister
                 input.InitializeInput(parameter);
                 Game.DisableScreenInput();
                 yield return input.FadeIn(unit.GetFloat("Fade"));
-                input.Enable(true);
+                input.Enable();
                 yield return input
                     .ShowMessage(unit.GetString("Description"), unit.GetFloat("Duration"));
                 yield return input.WaitForInput();
                 Game.HandleInput(systemParam);
                 yield return input.FadeOut(unit.GetFloat("Fade"));
-                input.Disable();
+                input.Hide();
                 Game.EnableScreenInput();
             }
             Script.Ends();
@@ -122,14 +122,14 @@ public class GSC_DialogueRegister : GSC_CommandRegister
                 choice.Initialize(choiceUnit.GetString("TargetResult"));
                 Game.DisableScreenInput();
                 yield return choice.FadeIn(choiceUnit.GetFloat("Fade"));
-                choice.Enable(true);
+                choice.Enable();
                 yield return choice
                     .ShowMessage(choiceUnit.GetString("Description"), choiceUnit.GetFloat("Duration"));
                 choice.SetupPanel(choiceUnit.Get());
                 yield return choice.WaitForChoice();
                 Game.HandleChoice(choiceUnit.GetBoolean("System"));
                 yield return choice.FadeOut(choiceUnit.GetFloat("Fade"));
-                choice.Disable();
+                choice.Hide();
                 Game.EnableScreenInput();
             }
             Script.Ends();

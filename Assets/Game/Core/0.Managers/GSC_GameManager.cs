@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 {
@@ -33,9 +34,9 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     {
         if (Menus.Count > 0)
         {
-            foreach (GSC_CanvasGroupController menu in Menus) menu.Disable();
+            foreach (GSC_CanvasGroupController menu in Menus) menu.Hide();
         }
-        MainMenu.Disable();
+        MainMenu.Hide();
         Data = new GSC_GameData();
         Data.Initialize();
         Alert = Components.GetController("Alert");
@@ -64,14 +65,14 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
     public void DisableScreenInput()
     {
-        ScreenInput.Disable();
-        Alert.Disable();
+        ScreenInput.Hide();
+        Alert.Hide();
     }
 
     public void EnableScreenInput()
     {
-        ScreenInput.Enable(true);
-        Alert.Enable(true);
+        ScreenInput.Enable();
+        Alert.Show();
     }
 
     public void HandleInput(bool toSystem)
@@ -119,7 +120,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     public IEnumerator WaitForComplete()
     {
         InputRequested = false;
-        if (!Alert.IsVisible) Alert.Enable(false);
+        if (!Alert.IsVisible) Alert.Show();
         yield return Alert.ShowMessage("Press on screen to continue...", 0.5f);
         while (InputRequested == false)
         {
@@ -148,7 +149,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
     #endregion
 
-    #region Story Methods
+   #region Story Methods
 
     public void LoadStory(GSC_GameSave save)
     {
@@ -168,12 +169,22 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     {
         DisableScreenInput();
         yield return MainMenu.FadeIn(fadetime);
-        MainMenu.Enable(true);
+        MainMenu.Enable();
         while (MainMenu.IsClicked == false) yield return null;
         MainMenu.ResetClick();
-        Components.DisableAll();
+        Components.HideAll();
         yield return MainMenu.FadeOut(fadetime);
-        MainMenu.Disable();
+        MainMenu.Hide();
+    }
+
+    public void ClearAllImages()
+    {
+        var component = Components.GetController(GSC_ImageControllers.BACKGROUND);
+        component.RemoveAll();
+        component = Components.GetController(GSC_ImageControllers.CHARACTERS);
+        component.RemoveAll();
+        component = Components.GetController(GSC_ImageControllers.FOREGROUND);
+        component.RemoveAll();
     }
 
     #endregion

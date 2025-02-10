@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5800f489bd805d544b293cadc0cbb102, type: 3}
+  m_Name: Scene Dialogue 09
+  m_EditorClassIdentifier: 
+  CharacterName: Aisley
+  Dialogue: In other hand, SWA was built to give assist to children, disabled and
+    old people, and end to serve as sexual slaves to unfertile men because no real
+    woman wants them. Don't you think that is poor destiny to them too?
+  Append: 0
+  Duration: 2
+  FadeTime: 2
+  WaitToComplete: 1

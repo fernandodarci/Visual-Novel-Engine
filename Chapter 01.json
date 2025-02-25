@@ -1,0 +1,36 @@
+{
+    "ChapterTitle": "",
+    "ChapterSubtitle": "",
+    "Scenes": [
+        {
+            "Name": "Scene 1",
+            "Actions": [
+                {
+                    "rid": 1000
+                }
+            ]
+        }
+    ],
+    "references": {
+        "version": 2,
+        "RefIds": [
+            {
+                "rid": 1000,
+                "type": {
+                    "class": "GSC_ChangeBackgroundAction",
+                    "ns": "",
+                    "asm": "Assembly-CSharp"
+                },
+                "data": {
+                    "Frame": {
+                        "instanceID": 48288
+                    },
+                    "Layer": 0,
+                    "ControllerName": 0,
+                    "FadeTime": 2.0,
+                    "HideAfter": 2.0
+                }
+            }
+        ]
+    }
+}

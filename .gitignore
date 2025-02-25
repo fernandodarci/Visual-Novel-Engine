@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Assets/Story
+/Assets/Unity Packages
+/Library
+/ProjectSettings
+/Temp
+/UserSettings
+/Assets/Game/6.Miscellaneous/Settings
+/Assets/Game/6.Miscellaneous/Game.mixer
+/Assets/Game/6.Miscellaneous/Video Texture.asset
+/Assets/Settings/Build Profiles

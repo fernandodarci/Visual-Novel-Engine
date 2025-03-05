@@ -1,9 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-using UnityEditor;
 using UnityEngine;
 
 public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
@@ -13,12 +9,13 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     private static GSC_ScriptManager Script => GSC_ScriptManager.Instance;
     private static GSC_DataManager Data => GSC_DataManager.Instance;
 
-    public bool DeveloperMode { get; private set; }
+    private static GSC_GameMenuManager Menu => GSC_GameMenuManager.Instance;
 
     [SerializeField] private Canvas MainCanvas;
     [SerializeField] private Canvas OverlayCanvas;
     [Header("Story")]
-    [SerializeField] private TextAsset Intro;
+    [SerializeField] private GSC_CanvasGroupController Logo;
+    [SerializeField] private GSC_CanvasGroupController Disclaimer;
     [SerializeField] private GSC_StoryUnit MainStory;
     [Header("Screen Controllers")]
     [SerializeField] private GSC_ScreenInput screenInput;
@@ -29,8 +26,12 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     {
         screenInput.RegisterEvent(OnLeftInput, OnRightInput);
         Dialogues.HideAllMessages();
+        Menu.HideAllMenus();
         Command.InitializeCommandHandling();
         Data.InitializeData();
+        Logo.Hide();
+        Disclaimer.Hide();
+        StartCoroutine(ToStartGame());
     }
 
     private void OnLeftInput()
@@ -47,51 +48,30 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         else Script.NextScene();
     }
 
+    #region NAVIGATORS
+
+    private IEnumerator ToStartGame()
+    {
+        yield return Logo.FadeIn(3f, () => false, () => false);
+        yield return new WaitForSeconds(2f);
+        yield return Logo.FadeOut(3f, () => false, () => false);
+        yield return Disclaimer.FadeIn(2f,() => false, () => false);
+        yield return new WaitForSeconds(10f);
+        yield return Disclaimer.FadeOut(2f,() => false, () => false);
+        yield return Menu.ShowMainMenu(2f,() => false,() => false);
+    }
+
     public void ToStartScreen()
     {
         GSC_GameMenuManager.Instance.HideAllMenus();
         OverlayCanvas.gameObject.SetActive(true);
         MainCanvas.gameObject.SetActive(false);
-        //Solução porca para o problema. Ele deve usar uma chamada que vai passar pelo GSC_CommandManager
-        //com os parametros corretos.
-        GSC_GameMenuManager.Instance.ShowMainMenu(2f,() => false,() => false);
+        StartCoroutine(GSC_GameMenuManager.Instance.ShowMainMenu(2f,() => false,() => false));
     }
-    ////This will process string from the game database.
-    //public string ProcessString(string text)
-    //{
-    //    string pattern1 = @"\{\{(.*?)\}\}";
-    //    string pattern2 = @"\[\[(.*?)\]\]";
-    //    string pattern3 = @"\<\<(.*?)\>\>";
 
-    //    var groups = Regex.Matches(text, pattern1);
+    #endregion
 
-    //    for (int i = 0; i < groups.Count; i++)
-    //    {
-    //        string value = Data.GetAsString(groups[i].Value[2..^2], true);
-    //        text.Replace(groups[i].Value, value);
-    //    }
-
-    //    groups = Regex.Matches(text, pattern2);
-
-    //    for (int i = 0; i < groups.Count; i++)
-    //    {
-    //        string value = Data.GetAsString(groups[i].Value[2..^2], false);
-    //        text.Replace(groups[i].Value, value);
-    //    }
-
-    //    groups = Regex.Matches(text, pattern3);
-
-    //    for (int i = 0; i < groups.Count; i++)
-    //    {
-    //        string value = GSC_SystemInfo.GetAsString(groups[i].Value[2..^2]);
-    //        text.Replace(groups[i].Value, value);
-    //    }
-
-    //    return text;
-    //}
-
-   
-   #region Story Methods
+    #region Story Methods
 
     public void LoadStory()
     {

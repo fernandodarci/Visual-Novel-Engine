@@ -1,10 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-[Serializable]
 public class GSC_ChangeBackgroundAction : GSC_SceneAction
 {
-    public override string ID => $"Change Background";
+    public new const string ID = "ID01";
 
     [SerializeField] private string Group;
     [SerializeField] private string Frame;
@@ -12,6 +11,8 @@ public class GSC_ChangeBackgroundAction : GSC_SceneAction
     [SerializeField] private float FadeTime;
     [SerializeField] private float WaitForSeconds;
     [SerializeField] private bool HideAfter;
+
+    public override string GetID() => ID;
 
     public override GSC_ContainerUnit Compile()
     {
@@ -23,5 +24,19 @@ public class GSC_ChangeBackgroundAction : GSC_SceneAction
         unit.Set("Wait", WaitForSeconds);
         unit.Set("Hide", HideAfter);
         return unit;
+    }
+
+    public override void Decompile(string json)
+    {
+        GSC_ContainerUnit result = GetContainer(json);
+        if (result != null)
+        {
+            Group = result.GetString("Group");
+            Frame = result.GetString("Frame");
+            Layer = result.GetInteger("Layer");
+            FadeTime = result.GetFloat("FadeTime");
+            WaitForSeconds = result.GetFloat("Wait");
+            HideAfter = result.GetBoolean("HideAfter");
+        }
     }
 }

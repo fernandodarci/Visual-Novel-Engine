@@ -5,8 +5,8 @@ using System;
 
 public class GSC_AudioSource : MonoBehaviour
 {
-    [SerializeField] private AudioMixerGroup Mixer;
-    [SerializeField] private AudioSource Source;
+    public AudioMixerGroup Mixer;
+    public AudioSource Source;
     [Range(0f, 1f)] public float Volume;
     
     public void InitializeAudioSource()

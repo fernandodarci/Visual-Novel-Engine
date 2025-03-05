@@ -61,6 +61,15 @@ public class GSC_ContainerUnit
         foreach (var kvp in container.Strings) result.Set(kvp.Label, kvp.Value);
         return result;
     }
+
+    public string GetAsString(string value)
+    {
+        if(HasBoolean(value)) return booleans[value] ? "True" : "False";
+        if(HasInteger(value)) return integers[value].ToString();
+        if(HasFloat(value)) return floats[value].ToString("D3");
+        if(HasString(value)) return strings[value].ToString();
+        return value;
+    }
 }
 
 public class GSC_ContainerUnit<TParam> : GSC_ContainerUnit

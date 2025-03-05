@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GSC_ProviderManager : GSC_Singleton<GSC_ProviderManager>
@@ -5,6 +6,9 @@ public class GSC_ProviderManager : GSC_Singleton<GSC_ProviderManager>
     [SerializeField] private GSC_CharactersList Characters;
     [SerializeField] private GSC_ScriptableObjectProvider StoryFrames;
     [SerializeField] private GSC_ScriptableObjectProvider StoryAssets;
+    
+    public string GetName(string Name, string As) => Characters.GetName(Name, As);
+    
     public string[] GetStoryFrameGroups() => StoryFrames.GetNames();
     public string[] GetFramesFromGroup(string group)
     {
@@ -25,5 +29,7 @@ public class GSC_ProviderManager : GSC_Singleton<GSC_ProviderManager>
         }
         return null;
     }
+
+    
 }
 

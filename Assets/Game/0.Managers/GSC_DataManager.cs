@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
 {
@@ -181,4 +182,30 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
     {
         CurrentSaveData.Set(name, value);
     }
+
+    public string ProcessString(string input)
+    {
+        input = Regex.Replace(input, @"@system\((.*?)\)", match =>
+            SystemData.GetAsString(match.Groups[1].Value));
+
+        input = Regex.Replace(input, @"@save\((.*?)\)", match =>
+            CurrentSaveData.GetAsString(match.Groups[1].Value));
+
+        input = Regex.Replace(input, @"@info\((.*?)\)", match =>
+            GSC_SystemInfo.GetAsString(match.Groups[1].Value));
+
+        input = Regex.Replace(input, @"@name\((.*?)\)", match =>
+        {
+            string content = match.Groups[1].Value;
+            if (content.Contains("=="))
+            {
+                string[] parts = content.Split(new string[] { "==" }, StringSplitOptions.None);
+                return GSC_ProviderManager.Instance.GetName(parts[0].Trim(), parts[1].Trim());
+            }
+            return GSC_ProviderManager.Instance.GetName(content.Trim(), null);
+        });
+
+        return input;
+    }
+
 }

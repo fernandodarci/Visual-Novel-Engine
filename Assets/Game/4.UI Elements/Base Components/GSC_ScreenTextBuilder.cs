@@ -22,6 +22,12 @@ public class GSC_ScreenTextBuilder : MonoBehaviour
     public IEnumerator BuildText(string dialogue, float duration, bool append, 
         Func<bool> pause, Func<bool> ends)
     {
+        if(duration <= 0.01f)
+        {
+            BuildInstant(dialogue, append);
+            yield break;
+        }
+
         switch (Method)
         {
             case GSC_TextBuildMethod.Typewriter:

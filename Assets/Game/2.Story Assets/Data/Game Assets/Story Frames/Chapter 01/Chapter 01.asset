@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9c43ae18df400458245116215970e3, type: 3}
+  m_Name: Chapter 01
+  m_EditorClassIdentifier: 
+  Assets:
+  - Name: Frame 01
+    Asset: {fileID: 21300000, guid: c3584f88575d8f543bd120d12899e263, type: 3}
+  - Name: Frame 02
+    Asset: {fileID: 21300000, guid: fdd3734582d2ad94f861970722f61809, type: 3}
+  - Name: Frame 03
+    Asset: {fileID: 21300000, guid: 311421719e200d14a9f6b46522c615fc, type: 3}
+  - Name: Frame 04
+    Asset: {fileID: 21300000, guid: 0dbb11ff586001d4abcb671e466b91aa, type: 3}
+  - Name: Frame 05
+    Asset: {fileID: 21300000, guid: 5d7ddd9faf7ae4e488f5b2174abcd07c, type: 3}
+  - Name: Frame 06
+    Asset: {fileID: 21300000, guid: 0101aa79d05b1af47889be16cad71fe6, type: 3}
+  - Name: Frame 07
+    Asset: {fileID: 21300000, guid: 07dbb622c65e0b543a5920dbb4f57b38, type: 3}
+  - Name: Frame 08
+    Asset: {fileID: 21300000, guid: 9eb222523c84ad8478cdea2930147490, type: 3}
+  - Name: Frame 09
+    Asset: {fileID: 21300000, guid: 087d32e4791d57343a1a137bc54f75dd, type: 3}
+  - Name: Frame 10
+    Asset: {fileID: 21300000, guid: f8245ea9f14c95f459cad3f54c15dcf1, type: 3}
+  - Name: Frame 11
+    Asset: {fileID: 21300000, guid: bf403483eb4491047adb3b0fe547e38b, type: 3}
+  - Name: Frame 12
+    Asset: {fileID: 21300000, guid: 72f566b9a5871544c929756aa8f3d9d4, type: 3}
+  - Name: Frame 13
+    Asset: {fileID: 21300000, guid: 9471640e9b3440948b65b603247a278c, type: 3}
+  - Name: Frame 14
+    Asset: {fileID: 21300000, guid: 0c138bd61d9f0d943b414c91f72c9360, type: 3}
+  - Name: Frame 15
+    Asset: {fileID: 21300000, guid: 69070b3272b05f847982c3f8fb29c8b3, type: 3}
+  - Name: Frame 16
+    Asset: {fileID: 21300000, guid: f1638e16851e550468e7bac440eabf60, type: 3}
+  - Name: Frame 17
+    Asset: {fileID: 21300000, guid: 348a8f6904c257c4db75c14d13986d96, type: 3}

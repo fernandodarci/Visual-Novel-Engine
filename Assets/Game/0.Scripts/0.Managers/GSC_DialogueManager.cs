@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GSC_DialogueManager : GSC_Singleton<GSC_DialogueManager>
@@ -135,23 +134,22 @@ public class GSC_DialogueManager : GSC_Singleton<GSC_DialogueManager>
             ChoicePanelController.Enable();
             string message = GSC_DataManager.Instance.ProcessString(unit.GetString("Message"));
             yield return ChoicePanelController
-                .ShowMessage(choiceUnit.GetString("Message"), 
+                .ShowMessage(choiceUnit.GetString("Message"),
                 choiceUnit.GetFloat("Duration"), paused, ends);
             ChoicePanelController.SetupPanel(choiceUnit.Get().ToArray());
             yield return ChoicePanelController.WaitForChoice();
-            if (choiceUnit.GetBoolean("System")) 
-                GSC_DataManager.Instance.AddOrChangeSystemValue
-                    (@choiceUnit.GetString("TargetResult"), ChoicePanelController.GetOption());
-            else 
-                GSC_DataManager.Instance.AddOrChangeSaveValue
-                    (choiceUnit.GetString("TargetResult"), ChoicePanelController.GetOption());
+            bool system = choiceUnit.GetBoolean("System");
+            string target = choiceUnit.GetString("TargetResult");
+            string result = ChoicePanelController.GetOption().Trim();
+            Debug.Log($"{target} => {result}");
+            GSC_DataManager.Instance.AddOrChangeValue(target, result, system);
 
             yield return ChoicePanelController.FadeOut(choiceUnit.GetFloat("Fade"), paused, ends);
             ChoicePanelController.Hide();
         }
         onEnd();
     }
-    
+
 
 
     //private static IEnumerator ShowInput(GSC_ContainerUnit unit, Func<bool> paused, Func<bool> ends)

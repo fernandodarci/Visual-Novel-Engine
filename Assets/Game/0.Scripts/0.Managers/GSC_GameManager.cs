@@ -19,6 +19,8 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     [Header("Screen Controllers")]
     [SerializeField] private GSC_ScreenInput screenInput;
     [SerializeField] private GSC_GameMenuController gameMenu;
+    [Header("Developer Option")]
+    [SerializeField] private bool DeveloperMode;
     private bool NavigationModeInput = false;
 
     private void Start()
@@ -50,12 +52,15 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
 
     private IEnumerator ToStartGame()
     {
-        yield return Logo.FadeIn(3f, () => false, () => false);
-        yield return new WaitForSeconds(2f);
-        yield return Logo.FadeOut(3f, () => false, () => false);
-        yield return Disclaimer.FadeIn(2f,() => false, () => false);
-        yield return new WaitForSeconds(10f);
-        yield return Disclaimer.FadeOut(2f,() => false, () => false);
+        if (DeveloperMode == false)
+        {
+            yield return Logo.FadeIn(3f, () => false, () => false);
+            yield return new WaitForSeconds(2f);
+            yield return Logo.FadeOut(3f, () => false, () => false);
+            yield return Disclaimer.FadeIn(2f, () => false, () => false);
+            yield return new WaitForSeconds(10f);
+            yield return Disclaimer.FadeOut(2f, () => false, () => false);
+        }
         yield return Menu.ShowMainMenu(2f,() => false,() => false);
     }
 

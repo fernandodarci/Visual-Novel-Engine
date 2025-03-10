@@ -2,12 +2,19 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
 {
+    #region Fields
+
     private GSC_ContainerUnit SystemData;
     private List<string> SaveList;
     private GSC_ContainerUnit CurrentSaveData;
+
+    #endregion
+
+    #region Initialization
 
     private string GetSaveFileName()
     {
@@ -17,13 +24,14 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
 
     public void InitializeData()
     {
+        // Cria a pasta de salvamento, se não existir
         if (!Directory.Exists(GSC_Constants.GameSavePath))
         {
             Directory.CreateDirectory(GSC_Constants.GameSavePath);
         }
 
+        // Processa os dados do sistema
         string systemDataFile = Path.Combine(GSC_Constants.GameSavePath, "SystemData.json");
-
         if (File.Exists(systemDataFile))
         {
             try
@@ -45,10 +53,9 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
             SaveData(true);
         }
 
+        // Processa os arquivos de salvamento
         string[] saveFiles = Directory.GetFiles(GSC_Constants.GameSavePath, "SaveFile *.json");
-
         SaveList = new List<string>();
-
         foreach (string file in saveFiles)
         {
             try
@@ -63,12 +70,17 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
             }
             catch
             {
-                // Se um arquivo não puder ser carregado, ele é ignorado
+                // Arquivo inválido, ignora
             }
         }
 
+        // Cria um novo container para o salvamento atual
         CurrentSaveData = new GSC_ContainerUnit(GetSaveFileName());
     }
+
+    #endregion
+
+    #region Save / Load Methods
 
     public void SaveData(bool system = false)
     {
@@ -80,7 +92,7 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
         }
         catch (Exception ex)
         {
-            // Log de erro pode ser adicionado aqui
+            // Possível log de erro
         }
     }
 
@@ -133,86 +145,70 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
                 }
                 catch (Exception ex)
                 {
-                    // Log pode ser adicionado aqui se necessário
+                    // Possível log de erro
                 }
             }
         }
     }
 
-    public void AddOrChangeSystemValue(string name, bool value)
+    #endregion
+
+    #region Setters
+
+    public void AddOrChangeValue(string name, bool value, bool system = false)
     {
-        SystemData.Set(name, value);
-        SaveData(true);
-    }
-
-    public void AddOrChangeSaveValue(string name, bool value)
-    {
-        CurrentSaveData.Set(name, value);
-    }
-
-    public void AddOrChangeSystemValue(string name, int value)
-    {
-        SystemData.Set(name, value);
-        SaveData(true);
-    }
-
-    public void AddOrChangeSaveValue(string name, int value)
-    {
-        CurrentSaveData.Set(name, value);
-    }
-
-    public void AddOrChangeSystemValue(string name, float value)
-    {
-        SystemData.Set(name, value);
-        SaveData(true);
-    }
-
-    public void AddOrChangeSaveValue(string name, float value)
-    {
-        CurrentSaveData.Set(name, value);
-    }
-
-    public void AddOrChangeSystemValue(string name, string value)
-    {
-        SystemData.Set(name, value);
-        SaveData(true);
-    }
-
-    public void AddOrChangeSaveValue(string name, string value)
-    {
-        CurrentSaveData.Set(name, value);
-    }
-
-    public string ProcessString(string input)
-    {
-        input = Regex.Replace(input, @"@system\((.*?)\)", match =>
-            SystemData.GetAsString(match.Groups[1].Value));
-
-        input = Regex.Replace(input, @"@save\((.*?)\)", match =>
-            CurrentSaveData.GetAsString(match.Groups[1].Value));
-
-        input = Regex.Replace(input, @"@info\((.*?)\)", match =>
-            GSC_SystemInfo.GetAsString(match.Groups[1].Value));
-
-        input = Regex.Replace(input, @"@name\((.*?)\)", match =>
+        if (system)
         {
-            string content = match.Groups[1].Value;
-            if (content.Contains("=="))
-            {
-                string[] parts = content.Split(new string[] { "==" }, StringSplitOptions.None);
-                return GSC_ProviderManager.Instance.GetName(parts[0].Trim(), parts[1].Trim());
-            }
-            return GSC_ProviderManager.Instance.GetName(content.Trim(), null);
-        });
-
-        return input;
+            SystemData.Set(name, value);
+            SaveData(true);
+        }
+        else
+        {
+            CurrentSaveData.Set(name, value);
+        }
     }
 
-    public bool CheckConditions(GSC_ContainerUnit conditions)
+    public void AddOrChangeValue(string name, int value, bool system = false)
     {
-        return CurrentSaveData.Compare(conditions);
+        if (system)
+        {
+            SystemData.Set(name, value);
+            SaveData(true);
+        }
+        else
+        {
+            CurrentSaveData.Set(name, value);
+        }
     }
 
+    public void AddOrChangeValue(string name, float value, bool system = false)
+    {
+        if (system)
+        {
+            SystemData.Set(name, value);
+            SaveData(true);
+        }
+        else
+        {
+            CurrentSaveData.Set(name, value);
+        }
+    }
+
+    public void AddOrChangeValue(string name, string value, bool system = false)
+    {
+        if (system)
+        {
+            SystemData.Set(name, value);
+            SaveData(true);
+        }
+        else
+        {
+            CurrentSaveData.Set(name, value);
+        }
+    }
+    #endregion
+
+    #region Getters
     public bool GetBooleanValue(string keyToCompare, bool system, out bool value)
     {
         value = false;
@@ -277,8 +273,191 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
         return false;
     }
 
-    internal void ReceiveOption(bool v, GSC_StringParameter gSC_StringParameter)
+    #endregion
+
+    #region Comparison Methods
+
+    public bool CompareBoolean(bool system, string keyToCompare, bool isVal, bool value)
     {
-        throw new NotImplementedException();
+        if (system)
+        {
+            return isVal ? SystemData.CompareBool(keyToCompare, value)
+                         : !SystemData.CompareBool(keyToCompare, value);
+        }
+        else
+        {
+            return isVal ? CurrentSaveData.CompareBool(keyToCompare, value)
+                         : !CurrentSaveData.CompareBool(keyToCompare, value);
+        }
     }
+
+    public bool CompareInteger(bool system, string keyToCompare, GSC_NumericComparator comp, int value)
+    {
+        if (system)
+            return SystemData.CompareInteger(keyToCompare, comp, value);
+        else
+            return !CurrentSaveData.CompareInteger(keyToCompare, comp, value);
+    }
+
+    public bool CompareFloat(bool system, string keyToCompare, GSC_NumericComparator comp, float value)
+    {
+        if (system)
+            return SystemData.CompareFloat(keyToCompare, comp, value);
+        else
+            return !CurrentSaveData.CompareFloat(keyToCompare, comp, value);
+    }
+
+    public bool CompareString(bool system, string keyToCompare, bool isVal, string value)
+    {
+        if (system)
+        {
+            return isVal ? SystemData.CompareString(keyToCompare, value)
+                         : !SystemData.CompareString(keyToCompare, value);
+        }
+        else
+        {
+            return isVal ? CurrentSaveData.CompareString(keyToCompare, value)
+                         : !CurrentSaveData.CompareString(keyToCompare, value);
+        }
+    }
+
+    #endregion
+
+    #region Operate Commands
+
+    public void Operate(bool system, string keyToOperate, bool set, bool value)
+    {
+        if (set)
+            AddOrChangeValue(keyToOperate, value, system);
+        else
+            RemoveBoolean(keyToOperate, system);
+    }
+
+    public void Operate(bool system, string keyToOperate, GSC_NumericOperator op, int value)
+    {
+        bool has = GetIntegerValue(keyToOperate, system, out int val);
+        switch (op)
+        {
+            case GSC_NumericOperator.SET:
+                AddOrChangeValue(keyToOperate, val, system);
+                break;
+            case GSC_NumericOperator.ADD:
+                AddOrChangeValue(keyToOperate, has ? val + value : value, system);
+                break;
+            case GSC_NumericOperator.SUBTRACT:
+                AddOrChangeValue(keyToOperate, has ? val - value : -value, system);
+                break;
+            case GSC_NumericOperator.UNSET:
+                if (has)
+                    RemoveInteger(keyToOperate, system);
+                break;
+        }
+    }
+
+    public void Operate(bool system, string keyToOperate, GSC_NumericOperator op, float value)
+    {
+        bool has = GetFloatValue(keyToOperate, system, out float val);
+        switch (op)
+        {
+            case GSC_NumericOperator.SET:
+                AddOrChangeValue(keyToOperate, val, system);
+                break;
+            case GSC_NumericOperator.ADD:
+                AddOrChangeValue(keyToOperate, has ? val + value : value, system);
+                break;
+            case GSC_NumericOperator.SUBTRACT:
+                AddOrChangeValue(keyToOperate, has ? val - value : -value, system);
+                break;
+            case GSC_NumericOperator.UNSET:
+                if (has)
+                    RemoveFloat(keyToOperate, system);
+                break;
+        }
+    }
+
+    public void Operate(bool system, string keyToOperate, bool set, string value)
+    {
+        if (set)
+            AddOrChangeValue(keyToOperate, value, system);
+        else
+            RemoveString(keyToOperate, system);
+    }
+    public void RemoveCondition(GSC_Conditions condition)
+    {
+        if (condition != null)
+        {
+            if (condition is GSC_BooleanCondition @b) RemoveBoolean(b.KeyToCompare, b.System);
+            if (condition is GSC_IntegerCondition @i) RemoveInteger(i.KeyToCompare, i.System);
+            if (condition is GSC_FloatCondition @f) RemoveFloat(f.KeyToCompare, f.System);
+            if (condition is GSC_StringCondition @s) RemoveString(s.KeyToCompare, s.System);
+        }
+    }
+    #endregion
+
+    #region Private Removal Methods
+
+    private void RemoveInteger(string keyToOperate, bool system)
+    {
+        if (system)
+            SystemData.RemoveInteger(keyToOperate);
+        else
+            CurrentSaveData.RemoveInteger(keyToOperate);
+    }
+
+    private void RemoveFloat(string keyToOperate, bool system)
+    {
+        if (system)
+            SystemData.RemoveFloat(keyToOperate);
+        else
+            CurrentSaveData.RemoveFloat(keyToOperate);
+    }
+
+    private void RemoveString(string keyToOperate, bool system)
+    {
+        if (system)
+            SystemData.RemoveString(keyToOperate);
+        else
+            CurrentSaveData.RemoveString(keyToOperate);
+    }
+
+    private void RemoveBoolean(string keyToOperate, bool system)
+    {
+        if (system)
+            SystemData.RemoveBoolean(keyToOperate);
+        else
+            CurrentSaveData.RemoveBoolean(keyToOperate);
+    }
+
+    #endregion
+
+    #region Miscellaneous
+
+    public string ProcessString(string input)
+    {
+        input = Regex.Replace(input, @"@system\((.*?)\)", match =>
+            SystemData.GetAsString(match.Groups[1].Value));
+
+        input = Regex.Replace(input, @"@save\((.*?)\)", match =>
+            CurrentSaveData.GetAsString(match.Groups[1].Value));
+
+        input = Regex.Replace(input, @"@info\((.*?)\)", match =>
+            GSC_SystemInfo.GetAsString(match.Groups[1].Value));
+
+        input = Regex.Replace(input, @"@name\((.*?)\)", match =>
+        {
+            string content = match.Groups[1].Value;
+            if (content.Contains("=="))
+            {
+                string[] parts = content.Split(new string[] { "==" }, StringSplitOptions.None);
+                return GSC_ProviderManager.Instance.GetName(parts[0].Trim(), parts[1].Trim());
+            }
+            return GSC_ProviderManager.Instance.GetName(content.Trim(), null);
+        });
+
+        return input;
+    }
+
+  
+    #endregion
+
 }

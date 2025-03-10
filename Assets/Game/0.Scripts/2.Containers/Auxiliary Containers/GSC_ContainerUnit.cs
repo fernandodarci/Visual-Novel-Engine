@@ -5,6 +5,8 @@ using UnityEngine;
 [Serializable]
 public class GSC_ContainerUnit
 {
+    #region Fields
+
     public string Calling;
     private readonly Dictionary<string, bool> booleans;
     private readonly Dictionary<string, int> integers;
@@ -12,6 +14,10 @@ public class GSC_ContainerUnit
     private readonly Dictionary<string, string> strings;
 
     public static object MainMenu { get; internal set; }
+
+    #endregion
+
+    #region Constructor
 
     public GSC_ContainerUnit(string calling)
     {
@@ -22,79 +28,155 @@ public class GSC_ContainerUnit
         strings = new Dictionary<string, string>();
     }
 
+    #endregion
+
+    #region Setters
+
     public void Set(string key, bool value) => booleans[key] = value;
     public void Set(string key, int value) => integers[key] = value;
     public void Set(string key, float value) => floats[key] = value;
     public void Set(string key, string value) => strings[key] = value;
 
+    #endregion
+
+    #region Checkers
+    
     public bool HasBoolean(string key) => booleans.ContainsKey(key);
     public bool HasInteger(string key) => integers.ContainsKey(key);
     public bool HasFloat(string key) => floats.ContainsKey(key);
     public bool HasString(string key) => strings.ContainsKey(key);
+    
+    #endregion
+    
+    #region Getters
     public bool GetBoolean(string key) => booleans[key];
     public int GetInteger(string key) => integers[key];
     public float GetFloat(string key) => floats[key];
     public string GetString(string key) => strings[key];
 
+    #endregion
+  
+    #region Removal Methods
+
+    public void RemoveBoolean(string key) => booleans.Remove(key);
+    public void RemoveInteger(string key) => integers.Remove(key);
+    public void RemoveFloat(string key) => floats.Remove(key);
+    public void RemoveString(string key) => strings.Remove(key);
+
+    #endregion
+ 
+    #region Utility Methods
+
+    public string GetAsString(string key)
+    {
+        if (HasBoolean(key))
+            return booleans[key] ? "True" : "False";
+        if (HasInteger(key))
+            return integers[key].ToString();
+        if (HasFloat(key))
+            return floats[key].ToString("F3");
+        if (HasString(key))
+            return strings[key];
+        return key;
+    }
+
+  
+    #endregion
+
+    #region Comparison Methods
+
+    public bool CompareBool(string key, bool valueToCompare)
+    {
+        return booleans.ContainsKey(key) && booleans[key] == valueToCompare;
+    }
+
+    public bool CompareInteger(string key, GSC_NumericComparator comp, int valueToCompare)
+    {
+        if (!integers.ContainsKey(key)) return false;
+
+        return comp switch
+        {
+            GSC_NumericComparator.Equals => integers[key] == valueToCompare,
+            GSC_NumericComparator.Not_Equals => integers[key] != valueToCompare,
+            GSC_NumericComparator.Greater => integers[key] > valueToCompare,
+            GSC_NumericComparator.Less => integers[key] < valueToCompare,
+            GSC_NumericComparator.Greater_Equals => integers[key] >= valueToCompare,
+            GSC_NumericComparator.Less_Equals => integers[key] <= valueToCompare,
+            _ => false
+        };
+    }
+
+    public bool CompareFloat(string key, GSC_NumericComparator comp, float valueToCompare)
+    {
+        if (!floats.ContainsKey(key))
+            return false;
+
+        float epsilon = 0.0001f;
+        float value = floats[key];
+        float diff = value - valueToCompare;
+
+        return comp switch
+        {
+            GSC_NumericComparator.Equals => Mathf.Abs(diff) < epsilon,
+            GSC_NumericComparator.Not_Equals => Mathf.Abs(diff) >= epsilon,
+            GSC_NumericComparator.Greater => diff > epsilon,
+            GSC_NumericComparator.Less => -diff > epsilon,
+            GSC_NumericComparator.Greater_Equals => diff > -epsilon,
+            GSC_NumericComparator.Less_Equals => -diff > -epsilon,
+            _ => false
+        };
+    }
+
+    public bool CompareString(string key, string value)
+    {
+        if (!strings.ContainsKey(key))
+        {
+            Debug.Log("Key not found");
+            return false;
+        }
+        if (strings[key] != value) Debug.Log($"Key is {value} but the register are for {strings[key]}");
+        return strings.ContainsKey(key) && strings[key] == value;
+    }
+
+    #endregion
+
+    #region JSON Serialization
+
     public string ToJson()
     {
         var result = new GSC_SerializableContainer(Calling);
-        foreach (var kvp in booleans) result.Booleans.Add
-                (new GSC_SerializableContainer.GSC_Boolean(kvp.Key, kvp.Value));
-        foreach (var kvp in integers) result.Integers.Add
-                (new GSC_SerializableContainer.GSC_Integer(kvp.Key,kvp.Value));
-        foreach(var kvp in floats) result.Floats.Add
-                (new GSC_SerializableContainer.GSC_Float(kvp.Key,kvp.Value));
-        foreach(var kvp in strings) result.Strings.Add
-                (new GSC_SerializableContainer.GSC_String(kvp.Key,kvp.Value));
+
+        foreach (var kvp in booleans)
+            result.Booleans.Add(new GSC_SerializableContainer.GSC_Boolean(kvp.Key, kvp.Value));
+        foreach (var kvp in integers)
+            result.Integers.Add(new GSC_SerializableContainer.GSC_Integer(kvp.Key, kvp.Value));
+        foreach (var kvp in floats)
+            result.Floats.Add(new GSC_SerializableContainer.GSC_Float(kvp.Key, kvp.Value));
+        foreach (var kvp in strings)
+            result.Strings.Add(new GSC_SerializableContainer.GSC_String(kvp.Key, kvp.Value));
+
         return JsonUtility.ToJson(result);
     }
 
-    public static GSC_ContainerUnit FromJson(string action)
+    public static GSC_ContainerUnit FromJson(string json)
     {
-        GSC_SerializableContainer container = JsonUtility.FromJson< GSC_SerializableContainer>(action);
+        GSC_SerializableContainer container = JsonUtility.FromJson<GSC_SerializableContainer>(json);
         if (container == null) return new GSC_ContainerUnit("Null");
-        GSC_ContainerUnit result = new(container.Calling);
-        foreach(var kvp in container.Booleans) result.Set(kvp.Label, kvp.Value);
-        foreach(var kvp in container.Integers) result.Set(kvp.Label,kvp.Value);
-        foreach (var kvp in container.Floats) result.Set(kvp.Label, kvp.Value);
-        foreach (var kvp in container.Strings) result.Set(kvp.Label, kvp.Value);
+
+        GSC_ContainerUnit result = new GSC_ContainerUnit(container.Calling);
+        foreach (var kvp in container.Booleans)
+            result.Set(kvp.Label, kvp.Value);
+        foreach (var kvp in container.Integers)
+            result.Set(kvp.Label, kvp.Value);
+        foreach (var kvp in container.Floats)
+            result.Set(kvp.Label, kvp.Value);
+        foreach (var kvp in container.Strings)
+            result.Set(kvp.Label, kvp.Value);
+
         return result;
     }
 
-    public string GetAsString(string value)
-    {
-        if(HasBoolean(value)) return booleans[value] ? "True" : "False";
-        if(HasInteger(value)) return integers[value].ToString();
-        if(HasFloat(value)) return floats[value].ToString("D3");
-        if(HasString(value)) return strings[value].ToString();
-        return value;
-    }
-
-    public void AddOrChange(GSC_ContainerUnit conditions)
-    {
-        foreach(var kvp in conditions.booleans)
-            booleans[kvp.Key] = kvp.Value;
-        foreach(var kvp in conditions.integers)
-            integers[kvp.Key] = kvp.Value;
-        foreach(var kvp in conditions.floats)
-            floats[kvp.Key] = kvp.Value;
-        foreach (var kvp in conditions.strings)
-            strings[kvp.Key] = kvp.Value;
-    }
-
-    public bool Compare(GSC_ContainerUnit other)
-    {
-        foreach (var kvp in other.booleans)
-             if (!booleans.TryGetValue(kvp.Key, out var result) || result != kvp.Value) return false;
-        foreach (var kvp in other.integers)
-            if (!integers.TryGetValue(kvp.Key, out var result) || result != kvp.Value) return false;
-        foreach (var kvp in other.floats)
-            if (!floats.TryGetValue(kvp.Key, out var result) || result != kvp.Value) return false;
-        foreach (var kvp in other.strings)
-            if (!strings.TryGetValue(kvp.Key, out var result) || result != kvp.Value) return false;
-        return true;
-    }
+    #endregion
 }
 
 public class GSC_ContainerUnit<TParam> : GSC_ContainerUnit

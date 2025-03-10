@@ -4,26 +4,40 @@ using UnityEngine;
 
 public class GSC_SceneSequenceUnit : MonoBehaviour
 {
-    public GSC_SequenceCondition ConditionToRun;
+    public List<GSC_ConditionsChain> Conditions;
     public List<GSC_SceneUnit> Scenes;
 
-    public bool MetConditions() => ConditionToRun.Match();
-    
+    public bool MetConditions()
+    {
+        if (Conditions == null || Conditions.Count == 0)
+            return false;
+
+        foreach (GSC_ConditionsChain chain in Conditions)
+        {
+            if (chain.Match()) return true;
+        }
+        return false;
+    }
+
 }
 
 [Serializable]
-public class GSC_SequenceCondition
+public class GSC_ConditionsChain
 {
-    [SerializeReference] public List<GSC_ValueComparer> Condition;
+    [SerializeReference] public List<GSC_Conditions> Conditions;
 
     public bool Match()
     {
-        if (Condition == null || Condition.Count == 0) return false;
-        foreach(var condition in Condition)
+        if (Conditions == null || Conditions.Count == 0)
+            return false;
+
+        foreach (var condition in Conditions)
         {
-            if (condition == null || !condition.Compare()) return false;
+            if (!condition.CompareValue()) return false;
         }
+        foreach (var condition in Conditions) GSC_DataManager.Instance.RemoveCondition(condition);
         return true;
-        
     }
 }
+
+

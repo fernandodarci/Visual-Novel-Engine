@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,14 +12,13 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
     [SerializeField] private GSC_SceneSequenceCollection Story;
     private GSC_SceneSequenceUnit Sequence;
     private bool NavigationMode;
-    private int CurrentSequence;
     private int CurrentScene;
     private int NavigationScene;
     private GSC_NavigationUserInput userInput;
 
     public void StartStory()
     {
-        CurrentSequence = 0;
+        
         CurrentScene = 0;
         Sequence = Story.Sequences[0];
         RunStory(Sequence);
@@ -49,6 +47,8 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         
         int Scene = NavigationMode ? NavigationScene : CurrentScene;
 
+        if (!NavigationMode) Sequence.Scenes[Scene].SetAllValues();
+
         GSC_Action[] actions = Sequence.Scenes[Scene].Actions.ToArray();
         Debug.LogWarning($"Scene: {Scene}");
         
@@ -70,15 +70,13 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         GSC_ContainerUnit[] containers = GetScene();
         if (containers != null && containers.Length > 0)
         {
+            GSC_CommandManager.Instance.PrepareToAction();
             foreach (var command in containers)
                 GSC_CommandManager.Instance.EnqueueCommand(command);
         }
 
-        while (!GSC_CommandManager.Instance.IsIdle())
-        {
-            yield return null;
-        }
-
+        // Aguarda até que o CommandManager esteja realmente Idle
+        yield return new WaitUntil(() => GSC_CommandManager.Instance.IsIdle());
     }
 
     public IEnumerator RunStorySequence(GSC_SceneSequenceUnit sequence, int sceneIndex)
@@ -103,7 +101,6 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
                     nextSequence = GoToNextSequence();
                     if (nextSequence != null)
                     {
-                        Debug.Log("Problem is not here");
                         SetupStoryPoint(nextSequence);
                         runStory = true;
                     }

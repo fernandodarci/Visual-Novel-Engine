@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 public enum GSC_CommandState
 {
-    Idle, Paused, Executing
+    Idle, Preparing, Paused, Executing
 }
 
 public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
@@ -77,9 +75,11 @@ public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
     {
         CommandAction action = null;
         if(GSC_DialogueManager.Instance.TryGetAction(unit, out action)) return action;
-        if(GSC_GraphicsManager.Instance.TryGetAction(unit,out action)) return action;
+        if(GSC_GraphicsManager.Instance.TryGetAction(unit, out action)) return action;
         return action;
     }
+
+    
 
     public void EnqueueCommand(GSC_ContainerUnit commandUnit)
     {
@@ -96,6 +96,7 @@ public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
             while (!endCurrentCoroutine)
             {
                 yield return executor(unit, IsPaused, IsEndRequested, Ends);
+                if (!endCurrentCoroutine) Ends();
             }
         }
     }
@@ -114,5 +115,14 @@ public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
     }
 
     public void RequestEnd() => requestEnd = true;
+
+
+  
+    internal void PrepareToAction()
+    {
+        CurrentState = GSC_CommandState.Preparing;
+    }
+
+    
 }
 

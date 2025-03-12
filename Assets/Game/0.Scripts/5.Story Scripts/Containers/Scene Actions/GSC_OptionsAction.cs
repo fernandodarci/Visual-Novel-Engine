@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public class GSC_OptionsAction : GSC_Action
+[Serializable]
+public class GSC_OptionActionAction : GSC_ScriptAction
 {
     [TextArea(2, 5)] public string Message;
     public bool System;
@@ -23,5 +24,39 @@ public class GSC_OptionsAction : GSC_Action
         result.Set(Options.ToArray());
         return result;
     }
-}
 
+    public override bool Decompile(GSC_ContainerUnit unit)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool Validate(GSC_ContainerUnit unit)
+    {
+        return unit.Calling == "ShowOptions" && unit is GSC_ContainerUnit<string[]> @opt
+            && unit.HasBoolean("System") && unit.HasString("Message") && unit.HasString("TargetResult")
+            && unit.HasFloat("Fade") && unit.HasFloat("Duration") && !opt.Get().IsNullOrEmpty();
+    }
+
+    protected override IEnumerator InnerAction(Func<bool> paused, Func<bool> ends, Action onEnd)
+    {
+        var OptionController = GSC_DialogueManager.Instance.GetOptionController();
+        if (OptionController != null && Validate(Compile()))
+        {
+            OptionController.ClearMessage();
+            yield return OptionController.FadeIn(Fade, paused, ends);
+            OptionController.Enable();
+            string message = GSC_DataManager.Instance.ProcessString(Message);
+            yield return OptionController.ShowMessage(message, Duration, paused, ends);
+                
+            OptionController.SetupPanel(Options.ToArray());
+            yield return OptionController.WaitForChoice();
+            string result = OptionController.GetOption();
+            GSC_DataManager.Instance.AddOrChangeValue(TargetResult, result, System);
+
+            yield return OptionController.FadeOut(Fade, paused, ends);
+            OptionController.Hide();
+        }
+        onEnd();
+    }
+
+}

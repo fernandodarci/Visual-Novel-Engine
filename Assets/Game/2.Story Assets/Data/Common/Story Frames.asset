@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Story Frames
   m_EditorClassIdentifier: 
   Assets:
-  - Name: Chapter 01
-    Asset: {fileID: 11400000, guid: d884b66c1f2398545965f5484ea27cca, type: 2}
+  - Name: One Bed Ap
+    Asset: {fileID: 11400000, guid: eaa4f3d8135d14c4b8c332edf3514d21, type: 2}

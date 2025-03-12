@@ -1,7 +1,6 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GSC_ButtonCaption : GSC_CanvasGroupController
@@ -18,7 +17,10 @@ public class GSC_ButtonCaption : GSC_CanvasGroupController
         SetCaption(captionText);
         button.onClick.AddListener(() => OnBtnClick(Value));
     }
-
+    public void SetImage(Sprite buttonImage)
+    {
+        button.image.sprite = buttonImage;
+    }
     public void SetColor(Color color) => button.image.color = color;
     public void SetCaption(string captionText)
     {
@@ -29,5 +31,7 @@ public class GSC_ButtonCaption : GSC_CanvasGroupController
     public void Unfreeze() => button.interactable = true;
 
     public string GetCaption() => Value;
+
+    
 }
 

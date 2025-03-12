@@ -10,10 +10,9 @@ public enum GSC_CommandState
 
 public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
 {
-    public delegate Func<GSC_ContainerUnit, Func<bool>, Func<bool>, Action, IEnumerator> CommandAction();
-
-    private Queue<GSC_ContainerUnit> commandQueue = new Queue<GSC_ContainerUnit>();
-    private CommandAction CurrentAction;
+    public delegate Func<Func<bool>, Func<bool>, Action, IEnumerator> GSC_CommandAction();
+    private Queue<GSC_CommandAction> commandQueue = new Queue<GSC_CommandAction>();
+    private GSC_CommandAction CurrentAction;
     private GSC_CommandState CurrentState;
 
     public bool IsIdle() => CurrentState == GSC_CommandState.Idle;
@@ -52,52 +51,44 @@ public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
             }
             else
             {
-                GSC_ContainerUnit unit = commandQueue.Dequeue();
-                if (unit != null)
+                CurrentAction = commandQueue.Dequeue();
+                if (CurrentAction != null)
                 {
-                    CurrentAction = GetAction(unit);
-                    if (CurrentAction != null)
-                    {
-                        CurrentState = GSC_CommandState.Executing;
-                        yield return WrapCoroutine(CurrentAction, unit);
-                        CurrentAction = null;
-                        Debug.Log("Action End");
-                        if (commandQueue.Count == 0) CurrentState = GSC_CommandState.Idle;
-                        else Debug.Log($"Remaining {commandQueue.Count} actions to end");
-                    }
+                    CurrentState = GSC_CommandState.Executing;
+                    yield return WrapCoroutine(CurrentAction);
+                    CurrentAction = null;
+                    Debug.Log("Action End");
+                    if (commandQueue.Count == 0) CurrentState = GSC_CommandState.Idle;
+                    else Debug.Log($"Remaining {commandQueue.Count} actions to end");
                 }
             }
-            yield return null;
         }
+        yield return null;
     }
 
-    private CommandAction GetAction(GSC_ContainerUnit unit)
-    {
-        CommandAction action = null;
-        if(GSC_DialogueManager.Instance.TryGetAction(unit, out action)) return action;
-        if(GSC_GraphicsManager.Instance.TryGetAction(unit, out action)) return action;
-        return action;
-    }
 
-    
-
-    public void EnqueueCommand(GSC_ContainerUnit commandUnit)
+    public void EnqueueCommand(GSC_CommandAction commandUnit)
     {
         commandQueue.Enqueue(commandUnit);
     }
 
-    private IEnumerator WrapCoroutine(CommandAction handler, GSC_ContainerUnit unit)
+    private IEnumerator WrapCoroutine(GSC_CommandAction handler)
     {
-        Func<GSC_ContainerUnit, Func<bool>, Func<bool>, Action, IEnumerator> executor = handler();
+        Func<Func<bool>, Func<bool>, Action, IEnumerator> executor = handler();
         if (executor != null)
         {
             endCurrentCoroutine = false;
             Debug.Log("Start handler");
             while (!endCurrentCoroutine)
             {
-                yield return executor(unit, IsPaused, IsEndRequested, Ends);
+                yield return executor(IsPaused, IsEndRequested, Ends);
                 if (!endCurrentCoroutine) Ends();
             }
+        }
+        else
+        {
+            Debug.Log("Empty handler");
+            Ends();
         }
     }
 
@@ -115,14 +106,10 @@ public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
     }
 
     public void RequestEnd() => requestEnd = true;
-
-
-  
-    internal void PrepareToAction()
+    public void PrepareToAction()
     {
         CurrentState = GSC_CommandState.Preparing;
     }
 
-    
-}
 
+}

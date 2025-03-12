@@ -5,14 +5,11 @@ using UnityEngine.UI;
 
 public class GSC_ScreenMessageController : GSC_CanvasGroupController
 {
-    [SerializeField] private string _ID;
     [SerializeField] private Image DialogueBackground;
     [SerializeField] private GSC_ScreenTextBuilder DialogueText;
    
     public bool IsFading => IsRunning;
     public bool IsBuilding => DialogueText.IsBuilding;
-
-    public string ID => _ID;
 
     private void Start()
     {

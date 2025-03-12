@@ -12,34 +12,17 @@ public class GSC_GameMenuManager : GSC_Singleton<GSC_GameMenuManager>
         MainMenu.Hide();
     }
 
-  
+
     #region MenuActions
-    
-    public void OnStartGame()
-    {
-        GSC_ContainerUnit unit = new GSC_ContainerUnit("OnStartGame");
-        unit.Set("FadeTime", 2f);
-        GSC_CommandManager.Instance.EnqueueCommand(unit);
-    }
 
-    #endregion
+    public void OnStartGame() => GSC_GameManager.Instance.StartStory();
 
-    #region Menu Fades
-    public IEnumerator ShowMainMenu(float fadeTime, Func<bool> pause, Func<bool> end)
+    public IEnumerator ShowMainMenu(float fadeTime)
     {
-        yield return MainMenu.FadeIn(fadeTime,pause,end);
+        HideAllMenus();
+        yield return MainMenu.FadeIn(fadeTime,() => false,() => false);
         MainMenu.Enable();
     }
 
-    public IEnumerator HideMenu(float fadeTime, Func<bool> pause, Func<bool> end)
-    {
-        yield return MainMenu.FadeOut(fadeTime,pause,end);
-        MainMenu.Hide();
-    }
-
-    public void HideMainMenu()
-    {
-        MainMenu.Hide();
-    }
     #endregion
 }

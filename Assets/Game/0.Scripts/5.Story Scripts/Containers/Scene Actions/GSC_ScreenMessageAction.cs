@@ -1,19 +1,14 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class GSC_ShowFullMessageAction : GSC_Action
-{
-    public new const string ID = "ID04";
-
-    public override string GetID() => ID;
-    public GSC_ScreenMessageData data;
-    
-}
-
 [Serializable]
-public class GSC_ScreenMessageData : GSC_ScriptData
+public class GSC_ShowMessageAction : GSC_ScriptAction
 {
     [TextArea(2, 10)] public string Message;
+    public string MessageType;
+    public Vector2 Position;
+    public Vector2 Size;
     public bool Append;
     public float Duration;
     public float FadeTime;
@@ -24,7 +19,7 @@ public class GSC_ScreenMessageData : GSC_ScriptData
     public override GSC_ContainerUnit Compile()
     {
         GSC_ContainerUnit unit = new("ShowMessage");
-        unit.Set("MessageType", "FullMessage");
+        unit.Set("MessageType", MessageType);
         unit.Set("Message", Message);
         unit.Set("Append", Append);
         unit.Set("Duration", Duration);
@@ -45,7 +40,7 @@ public class GSC_ScreenMessageData : GSC_ScriptData
 
     public override bool Decompile(GSC_ContainerUnit result)
     {
-        if (result != null)
+        if (result != null && Validate(result))
         {
             Message = result.GetString("Message");
             Append = result.GetBoolean("Append");
@@ -59,5 +54,31 @@ public class GSC_ScreenMessageData : GSC_ScriptData
         return false;
     }
 
+    protected override IEnumerator InnerAction(Func<bool> paused, Func<bool> ends, Action onEnd)
+    {
+        GSC_DialogueManager.Instance
+            .GetScreenMessageController(MessageType,new GSC_PositionSize(Position,Size));
+        var currentController = GSC_DialogueManager.Instance.CurrentController;
 
+        if (currentController != null && Validate(Compile()))
+        {
+            currentController.ClearText();
+            yield return currentController.ShowMessagePanel(FadeTime, paused, ends);
+            yield return currentController.ShowMessage(Message, Duration, Append, paused, ends);
+
+            if (WaitToComplete == true)
+            {
+                yield return GSC_Constants.WaitForComplete(ends);
+            }
+            else
+            {
+                if (WaitUntilComplete > float.Epsilon)
+                {
+                    yield return GSC_Constants.WaitForSeconds(WaitUntilComplete, paused, ends);
+                }
+            }
+        }
+
+        onEnd();
+    }
 }

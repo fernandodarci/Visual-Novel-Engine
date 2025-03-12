@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GSC_GameMenuController : GSC_CanvasGroupController
+public class GSC_InGameMenuController : GSC_CanvasGroupController
 {
     [SerializeField] private Button Auto;
     [SerializeField] private Button Navigate;

@@ -17,15 +17,16 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     [SerializeField] private GSC_CanvasGroupController Logo;
     [SerializeField] private GSC_CanvasGroupController Disclaimer;
     [Header("Screen Controllers")]
-    [SerializeField] private GSC_ScreenInput screenInput;
-    [SerializeField] private GSC_GameMenuController gameMenu;
+    [SerializeField] private GSC_ScreenInput ScreenInputController;
+    [SerializeField] private GSC_InGameMenuController InGameMenuController;
+    [SerializeField] private GSC_NavigationPointsController NavigationController;
     [Header("Developer Option")]
     [SerializeField] private bool DeveloperMode;
     private bool NavigationModeInput = false;
 
     private void Start()
     {
-        screenInput.RegisterEvent(OnLeftInput, OnRightInput);
+        ScreenInputController.RegisterEvent(OnLeftInput, OnRightInput);
         Dialogues.HideAllMessages();
         Menu.HideAllMenus();
         Data.InitializeData();
@@ -61,7 +62,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
             yield return new WaitForSeconds(10f);
             yield return Disclaimer.FadeOut(2f, () => false, () => false);
         }
-        yield return Menu.ShowMainMenu(2f,() => false,() => false);
+        yield return Menu.ShowMainMenu(2f);
     }
 
     public void ToStartScreen()
@@ -69,8 +70,22 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         GSC_GameMenuManager.Instance.HideAllMenus();
         OverlayCanvas.gameObject.SetActive(true);
         MainCanvas.gameObject.SetActive(false);
-        StartCoroutine(GSC_GameMenuManager.Instance.ShowMainMenu(2f,() => false,() => false));
+        StartCoroutine(GSC_GameMenuManager.Instance.ShowMainMenu(2f));
     }
+    
+    public void ToPrepareInterfaces()
+    {
+        ScreenInputController.Hide();
+        InGameMenuController.Hide();
+        NavigationController.Hide();
+    }
+
+    public GSC_NavigationPointsController GetNavPoints()
+    {
+        return NavigationController;
+    }
+
+
 
     #endregion
 
@@ -84,7 +99,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     public void StartStory()
     {
         Debug.Log("Story Started");
-        GSC_GameMenuManager.Instance.HideMainMenu();
+        GSC_GameMenuManager.Instance.HideAllMenus();
         OverlayCanvas.gameObject.SetActive(false);
         MainCanvas.gameObject.SetActive(true);
         GSC_ScriptManager.Instance.StartStory();
@@ -96,6 +111,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
         Script.StartNavigation();
     }
 
-    
+  
+
     #endregion
 }

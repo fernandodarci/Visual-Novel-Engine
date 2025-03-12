@@ -165,10 +165,5 @@ public class GSC_GraphicsManager : GSC_Singleton<GSC_GraphicsManager>
             yield return value.FadeOut(duration, pause, end);
         }
     }
-
-    internal bool TryGetAction(GSC_ContainerUnit unit, out GSC_CommandManager.CommandAction action)
-    {
-        throw new NotImplementedException();
-    }
 }
 

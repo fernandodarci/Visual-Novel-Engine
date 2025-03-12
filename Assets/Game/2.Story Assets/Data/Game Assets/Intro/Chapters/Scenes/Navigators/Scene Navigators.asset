@@ -10,20 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d9c43ae18df400458245116215970e3, type: 3}
-  m_Name: Chapter 01
+  m_Name: Scene Navigators
   m_EditorClassIdentifier: 
   Assets:
-  - Name: Frame 01
+  - Name: Nav01
     Asset: {fileID: 21300000, guid: 9e144724a6b955d499e54120a8e8c7e9, type: 3}
-  - Name: Frame 02
+  - Name: Nav02
     Asset: {fileID: 21300000, guid: 933065a6e7b40f24499789a928a01971, type: 3}
-  - Name: Frame 03
+  - Name: Nav03
     Asset: {fileID: 21300000, guid: e8128cc28810d4343af842b86462cbd1, type: 3}
-  - Name: Frame 04
+  - Name: Nav04
+    Asset: {fileID: 21300000, guid: 5ceec1a08ae126748a7463789914dc6b, type: 3}
+  - Name: Nav05
     Asset: {fileID: 21300000, guid: 37d39e8452a1bdc4aa473cc75e846b21, type: 3}
-  - Name: Frame 05
+  - Name: Nav06
     Asset: {fileID: 21300000, guid: 6af6c311010c0c842a05861afbf157c3, type: 3}
-  - Name: Frame 06
+  - Name: Nav07
     Asset: {fileID: 21300000, guid: 5a8231ad018c2d34eb6a4e521b94b54a, type: 3}
-  - Name: Frame 07
+  - Name: Nav08
     Asset: {fileID: 21300000, guid: fce8b2c6a75a2b947b1bd19c796fd0f9, type: 3}

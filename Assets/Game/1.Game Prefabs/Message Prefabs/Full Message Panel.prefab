@@ -211,7 +211,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f9f4799ed77ceb41b669c42e15b4741, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DialoguePanelBackground: {fileID: 8723935994743875729}
   DialogueBackground: {fileID: 5299974478259294}
   DialogueText: {fileID: 3765475481870669061}
 --- !u!114 &8723935994743875729

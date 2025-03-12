@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GSC_CommandManager;
 
 public enum GSC_NavigationUserInput
 {
@@ -9,7 +10,7 @@ public enum GSC_NavigationUserInput
 
 public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
 {
-    [SerializeField] private GSC_SceneSequenceCollection Story;
+    [SerializeField] private GSC_Story Story;
     private GSC_SceneSequenceUnit Sequence;
     private bool NavigationMode;
     private int CurrentScene;
@@ -18,12 +19,13 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
 
     public void StartStory()
     {
-        
+        Story.CreateStoryFromScript();
         CurrentScene = 0;
         Sequence = Story.Sequences[0];
         RunStory(Sequence);
     }
 
+  
     public bool SetupStoryPoint(GSC_SceneSequenceUnit sequence, int scene = 0)
     {
         if (sequence == null) Debug.Log("A merda ta na sequencia");
@@ -41,37 +43,39 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         return true;
     }
 
-    public GSC_ContainerUnit[] GetScene()
+    public GSC_CommandAction[] GetScene()
     {
-        if (Sequence == null) return new GSC_ContainerUnit[0];
+        if (Sequence == null) return new GSC_CommandAction[0];
         
         int Scene = NavigationMode ? NavigationScene : CurrentScene;
 
         if (!NavigationMode) Sequence.Scenes[Scene].SetAllValues();
 
-        GSC_Action[] actions = Sequence.Scenes[Scene].Actions.ToArray();
+        GSC_ScriptAction[] actions = Sequence.Scenes[Scene].Actions.ToArray();
         Debug.LogWarning($"Scene: {Scene}");
         
-        if (actions != null && actions.Length > 0)
+        if (!actions.IsNullOrEmpty())
         {
-            List<GSC_ContainerUnit> units = new List<GSC_ContainerUnit>();
+            List<GSC_CommandAction> units 
+                = new List<GSC_CommandAction>();
+            
             foreach (var action in actions)
             {
-                units.Add(action.Compile());
+                units.Add(action.GetAction());
             }
             return units.ToArray();
         }
         
-        return new GSC_ContainerUnit[0];
+        return new GSC_CommandAction[0];
     }
 
     public IEnumerator RunScene()
     {
-        GSC_ContainerUnit[] containers = GetScene();
-        if (containers != null && containers.Length > 0)
+        GSC_CommandAction[] commands = GetScene();
+        if (!commands.IsNullOrEmpty())
         {
             GSC_CommandManager.Instance.PrepareToAction();
-            foreach (var command in containers)
+            foreach (var command in commands)
                 GSC_CommandManager.Instance.EnqueueCommand(command);
         }
 
@@ -98,7 +102,7 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
                 GSC_SceneSequenceUnit nextSequence = null;
                 while (nextSequence == null)
                 {
-                    nextSequence = GoToNextSequence();
+                    nextSequence = Story.GetSequence();
                     if (nextSequence != null)
                     {
                         SetupStoryPoint(nextSequence);
@@ -109,15 +113,6 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
             }
 
         }
-    }
-
-    private GSC_SceneSequenceUnit GoToNextSequence()
-    {
-        foreach(GSC_SceneSequenceUnit sequence in Story.Sequences)
-        {
-            if(sequence.MetConditions()) return sequence;
-        }
-        return null;
     }
 
     public void RunStory(GSC_SceneSequenceUnit sequence, int sceneIndex = 0)
@@ -199,4 +194,3 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         return currentInput;
     }
 }
-

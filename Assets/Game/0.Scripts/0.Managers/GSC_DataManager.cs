@@ -449,15 +449,20 @@ public class GSC_DataManager : GSC_Singleton<GSC_DataManager>
             if (content.Contains("=="))
             {
                 string[] parts = content.Split(new string[] { "==" }, StringSplitOptions.None);
-                return GSC_ProviderManager.Instance.GetName(parts[0].Trim(), parts[1].Trim());
+                return GSC_ProviderManager.Instance.GetCharacterName(parts[0].Trim(), parts[1].Trim());
             }
-            return GSC_ProviderManager.Instance.GetName(content.Trim(), null);
+            return GSC_ProviderManager.Instance.GetCharacterName(content.Trim(), null);
         });
 
         return input;
     }
 
-  
+    public string ProcessCharacterName(string characterName, string nickName)
+    {
+        return GSC_ProviderManager.Instance.GetCharacterName(characterName, nickName);
+    }
+
+
     #endregion
 
 }

@@ -70,6 +70,7 @@
     <Compile Include="Assets\Game\0.Scripts\6.Miscellaneous\Utils\GSC_Singleton.cs" />
     <Compile Include="Assets\Game\0.Scripts\4.UI Elements\Base Components\GSC_ToggleButton.cs" />
     <Compile Include="Assets\Game\0.Scripts\2.Containers\Providers\GSC_SoundProvider.cs" />
+    <Compile Include="Assets\Game\0.Scripts\5.Story Scripts\Containers\Scene Actions\GSC_ShowDialogueAction.cs" />
     <Compile Include="Assets\Game\0.Scripts\0.Managers\GSC_StoryScriptHelper.cs" />
     <Compile Include="Assets\Game\0.Scripts\4.UI Elements\Components\GSC_VideoPlayer.cs" />
     <Compile Include="Assets\Game\0.Scripts\2.Containers\Providers\GSC_GameObjectProvider.cs" />

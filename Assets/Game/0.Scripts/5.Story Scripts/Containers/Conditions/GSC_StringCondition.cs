@@ -7,4 +7,3 @@
       .CompareString(System, KeyToCompare, IsValue, Value);
 
 }
-

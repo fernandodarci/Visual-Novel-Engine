@@ -10,15 +10,21 @@ public class GSC_CharactersList : ScriptableObject
     public string GetName(string Name, string Nickname)
     {
         string currentName = string.IsNullOrWhiteSpace(Nickname) ? Name : Nickname;
-        currentName.Trim();
+        
         GSC_Character character = Characters.Find(x => x.CharacterName == Name);
         if (character != null)
         {
-            
+            currentName.Trim();
             string rgb = ColorUtility.ToHtmlStringRGB(character.CharacterNameColor);
             return $"<color=#{rgb}>{currentName}</color>";
         }
         else return $"<color=black>{currentName}</color>";
+    }
+
+    public bool IsCharacter(string currentCharacter)
+    {
+        GSC_Character character = Characters.Find(x => x.CharacterName == currentCharacter);
+        return character != null;
     }
 
     [Serializable]

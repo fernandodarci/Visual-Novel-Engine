@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class GSC_OptionActionAction : GSC_ScriptAction
+public class GSC_OptionsAction : GSC_ScriptAction
 {
     [TextArea(2, 5)] public string Message;
     public bool System;

@@ -5,7 +5,5 @@
 
     public override bool CompareValue() => GSC_DataManager.Instance
         .CompareBoolean(System, KeyToCompare, IsValue, Value);
-    
-    
 }
 

@@ -6,4 +6,3 @@
     public override void Operate() => GSC_DataManager.Instance.Operate(System, KeyToOperate, Set, Value);
 
 }
-

@@ -40,5 +40,18 @@ public static class GSC_ArrayExtensions
 
     #endregion
 
-    
+    #region Compare
+
+    public static bool CompareInv(this string source, string target)
+    {
+        if(source.IsNullOrEmpty() && target.IsNullOrEmpty())
+            return true;
+        if (source.IsNullOrEmpty() || target.IsNullOrEmpty())
+            return false;
+        return source.Trim().ToLower().Equals(target.Trim().ToLower());
+    }
+
+    #endregion
+
 }
+

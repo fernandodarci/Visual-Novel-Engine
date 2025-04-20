@@ -62,8 +62,24 @@ public class GSC_ElementView : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    public void Show(bool interact = false)
+    {
+        ForceInitialize();
+        _canvasGroup.alpha = 1;
+        _canvasGroup.interactable = interact;
+        _canvasGroup.blocksRaycasts = interact;
+    }
+
+    public void Hide()
+    {
+        ForceInitialize();
         _canvasGroup.alpha = 0;
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
     }
+
+    public void SetVisibility(float value) => _canvasGroup.alpha = value;
+    
 }

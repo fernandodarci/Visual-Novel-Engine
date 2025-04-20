@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
+using UnityEngine;
 
 [Serializable]
 public class GSC_ShowDialogueBoxAction : GSC_ScriptAction
 {
     public string Character;
     public string NameToShow;
-    public string Dialogue;
+    [TextArea(2,5)] public string Dialogue;
     public float FadeTime;
     public bool Append;
     public float Duration;
@@ -59,9 +60,10 @@ public class GSC_ShowDialogueBoxAction : GSC_ScriptAction
         if (box != null)
         {
             box.ClearMessages();
+            box.SetCharacterName(Character, NameToShow);
             if (!box.IsVisible)
                 yield return box.FadeIn(FadeTime, false, paused, ends);
-            box.SetCharacterName(Character, NameToShow);
+            
             yield return box.SetDialogue(Dialogue,Duration,Append,paused,ends);
 
             if (WaitTime < 0)

@@ -73,6 +73,11 @@ public class GSC_CommandManager : GSC_Singleton<GSC_CommandManager>
         commandQueue.Enqueue(commandUnit);
     }
 
+    public void EnqueueAction(GSC_ScriptAction action)
+    {
+        commandQueue.Enqueue(action.GetAction());
+    }
+
     private IEnumerator WrapCoroutine(GSC_CommandAction handler)
     {
         Func<Func<bool>, Func<bool>, Action, IEnumerator> executor = handler();

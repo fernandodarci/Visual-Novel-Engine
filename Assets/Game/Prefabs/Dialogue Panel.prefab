@@ -660,8 +660,8 @@ MonoBehaviour:
   Separator: {fileID: 7124164042878713138}
   DialogueBackground: {fileID: 3923418326469463574}
   CharacterName: {fileID: 6087275172771935311}
-  Dialogue: {fileID: 4066547155465433458}
-  EndDialogueMessage: {fileID: 6589286195318273038}
+  Dialogue: {fileID: 6130249680534331258}
+  EndDialogueMessage: {fileID: 4589394414154902958}
 --- !u!114 &2225236825321551261
 MonoBehaviour:
   m_ObjectHideFlags: 0

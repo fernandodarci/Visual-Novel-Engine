@@ -11,7 +11,6 @@ public class GSC_SmoothTextRender : MonoBehaviour
     public GSC_TextBuildMethod Method;
     
     public bool IsBuilding { get; private set; } = false;
-    private bool ContinueToBuild;
     private int PreTextLength;
     
     private byte alphaThreshold => 15;
@@ -66,8 +65,7 @@ public class GSC_SmoothTextRender : MonoBehaviour
         Func<bool> pause, Func<bool> ends)
     {
         IsBuilding = true;
-        ContinueToBuild = true;
-
+        
         if (append == false)
         {
             Textline.text = string.Empty;
@@ -120,8 +118,12 @@ public class GSC_SmoothTextRender : MonoBehaviour
 
         var info = Textline.textInfo;
         Color32[] VertexColors = info.meshInfo[info.characterInfo[0].materialReferenceIndex].colors32;
-        
-        if (ends()) yield break;
+
+        if (ends())
+        {
+            OnComplete();
+            yield break;
+        }
         
         for (int i = PreTextLength; i < info.characterCount; i++)
         {
@@ -183,8 +185,7 @@ public class GSC_SmoothTextRender : MonoBehaviour
         Textline.text = string.Empty;
     }
 
-    public void CompleteDialogue() => ContinueToBuild = false;
-    
+    public void CompleteDialogue() => OnComplete();
 }
     
 

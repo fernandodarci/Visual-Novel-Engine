@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GSC_CommandManager;
@@ -11,24 +10,30 @@ public enum GSC_NavigationUserInput
 
 public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
 {
-    [SerializeField] private GSC_Story Story;
-    private GSC_ScriptBlock Sequence;
+    private GSC_Story Story;
+    private GSC_ScriptBlock Block;
     private bool NavigationMode;
     private int CurrentScene;
     private int NavigationScene;
     private GSC_NavigationUserInput userInput;
 
-    public void StartStory()
+    public void StartStory(GSC_Story story)
     {
+        if (story == null)
+        {
+            Debug.Log("No story provided. Aborting...");
+            return;
+        }
+        Story = story;
         CurrentScene = 0;
-        Sequence = Story.Sequences[0];
-        RunStory(Sequence);
+        Block = Story.Blocks[0];
+        RunStory(Block);
     }
-  
-    public bool SetupStoryPoint(GSC_ScriptBlock sequence, int scene = 0)
+
+    public bool SetupStoryPoint(GSC_ScriptBlock block, int scene = 0)
     {
-        if (sequence == null) Debug.Log("A merda ta na sequencia");
-        Sequence = sequence;
+        if (block == null) Debug.Log("A merda ta na sequencia");
+        Block = block;
         CurrentScene = scene;
         NavigationScene = scene;
         return true;
@@ -37,20 +42,16 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
     public bool Pass()
     {
         CurrentScene++;
-        if (Sequence == null) Debug.Log("Vai dar merda");
-        if (Sequence.Units.Count == CurrentScene) return false;
-        return true;
+        return Block != null && Block.Units.Count < CurrentScene;
     }
 
     public GSC_CommandAction[] GetScene()
     {
-        if (Sequence == null) return new GSC_CommandAction[0];
+        if (Block == null) return new GSC_CommandAction[0];
         
         int Scene = NavigationMode ? NavigationScene : CurrentScene;
 
-        if (!NavigationMode) Sequence.Units[Scene].SetAllValues();
-
-        GSC_ScriptAction[] actions = Sequence.Units[Scene].Actions.ToArray();
+        GSC_ScriptAction[] actions = Block.Units[Scene].Actions.ToArray();
         Debug.LogWarning($"Scene: {Scene}");
         
         if (!actions.IsNullOrEmpty())
@@ -100,7 +101,7 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
                 GSC_ScriptBlock nextSequence = null;
                 while (nextSequence == null)
                 {
-                    nextSequence = Story.GetSequence();
+                    nextSequence = Story.Blocks.Find(x => x.Name == Block.SequenceToFollow);
                     if (nextSequence != null)
                     {
                         SetupStoryPoint(nextSequence);
@@ -182,7 +183,7 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
     {
         NavigationMode = false;
         StopAllCoroutines();
-        RunStory(Sequence, CurrentScene);
+        RunStory(Block, CurrentScene);
     }
 
     private GSC_NavigationUserInput GetUserInput()
@@ -191,4 +192,7 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         userInput = GSC_NavigationUserInput.NoInput;
         return currentInput;
     }
+
+   
 }
+

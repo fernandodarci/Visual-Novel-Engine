@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using TMPro;
@@ -15,26 +16,39 @@ public class GSC_DialogueBox : GSC_ElementView
     [SerializeField] private TMP_Text CharacterName;
     [SerializeField] private GSC_SmoothTextRender Dialogue;
     [SerializeField] private GSC_SmoothTextRender EndDialogueMessage;
+    
+    private string LastCharacterName = string.Empty;
 
     public void SetCharacterName(string characterName, string nameToShow)
     {
-        if (!characterName.IsNullOrEmpty() || characterName.Trim().ToLower() != "narrator")
+        if (characterName.IsNullOrEmpty())
         {
-            CharacterNameBackground.gameObject.SetActive(true);
-            CharacterName.gameObject.SetActive(true);
-            Separator.gameObject.SetActive(true);
-            CharacterName.text = nameToShow.IsNullOrEmpty() ? characterName.Trim() : nameToShow.Trim();
+            if (LastCharacterName != string.Empty)
+            {
+                CharacterName.text =
+                    GSC_CharacterManager.Instance.GetCharacterName(LastCharacterName, nameToShow);
+            }
+        }
+        else if (characterName.Trim().ToLower() == "narrator")
+        {
+            CharacterName.text = string.Empty;
+            CharacterNameBackground.gameObject.SetActive(false);
+            Separator.gameObject.SetActive(false);
         }
         else
         {
-            CharacterNameBackground.gameObject.SetActive(false);
-            CharacterName.gameObject.SetActive(false);
-            Separator.gameObject.SetActive(false);
+            LastCharacterName = characterName;
+            CharacterName.text =
+                GSC_CharacterManager.Instance.GetCharacterName(characterName, nameToShow);
+            CharacterNameBackground.gameObject.SetActive(true);
+            Separator.gameObject.SetActive(true);
         }
+        
     }
 
     public IEnumerator SetDialogue(string dialogue, float duration, bool append, Func<bool> paused, Func<bool> ends)
     {
+        yield return new WaitForSeconds(1f);
         dialogue = dialogue.Trim();
         yield return Dialogue.BuildText(dialogue, duration, append, paused, ends);
     }

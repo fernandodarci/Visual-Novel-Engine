@@ -1,0 +1,3 @@
+@block "Main Path 01"
+@scene
+@bg "Data\Scene Sprites\Scene 01" 0 0 2.0 2.0 false

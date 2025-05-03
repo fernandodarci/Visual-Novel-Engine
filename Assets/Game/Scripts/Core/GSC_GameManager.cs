@@ -14,7 +14,7 @@ public class GSC_GameManager : GSC_Singleton<GSC_GameManager>
     
     public void Start()
     {
-        Scripts.StartStory(_MainStory);
+       // Scripts.StartStory(_MainStory);
         _ScreenInputController.Initialize(OnScreenInputLeft, OnScreenInputRight);
     }
 

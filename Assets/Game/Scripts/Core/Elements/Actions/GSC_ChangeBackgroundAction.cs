@@ -40,6 +40,11 @@ public class GSC_ChangeBackgroundAction : GSC_ScriptAction
         return false;
     }
 
+    public override GSC_ContainerUnit TryDecodeScript(string[] line)
+    {
+        throw new NotImplementedException();
+    }
+
     public override bool Validate(GSC_ContainerUnit unit)
     {
         return unit != null && unit.Calling == "ChangeBackground" &&

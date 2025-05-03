@@ -75,13 +75,16 @@
     <Compile Include="Assets\Game\Scripts\UI Elements\Components\GSC_ElementViewManager.cs" />
     <Compile Include="Assets\Game\Scripts\UI Elements\GSC_ElementView.cs" />
     <Compile Include="Assets\Game\Scripts\Core\GSC_DataManager.cs" />
-    <Compile Include="Assets\Game\Scripts\Graphics\GSC_ChangeBackgroundAction.cs" />
+    <Compile Include="Assets\Game\Scripts\Core\Elements\Actions\GSC_NullAction.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Story Script\GSC_ScriptUnit.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Operators\GSC_BooleanOperator.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Story Script\GSC_Story.cs" />
+    <Compile Include="Assets\Game\Scripts\Core\Elements\Actions\GSC_ShowDialogueBoxAction.cs" />
     <Compile Include="Assets\Game\Scripts\Utils\GSC_MonoBehaviourUtils.cs" />
+    <Compile Include="Assets\Game\Scripts\Core\Elements\Actions\GSC_WaitAction.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Operators\GSC_Operator.cs" />
     <Compile Include="Assets\Game\Scripts\Core\GSC_CharacterManager.cs" />
+    <Compile Include="Assets\Game\Scripts\Core\Elements\Actions\GSC_LoadScriptAction.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Containers\GSC_Character.cs" />
     <Compile Include="Assets\Game\Scripts\Utils\GSC_SmoothTextRender.cs" />
     <Compile Include="Assets\Game\Scripts\Utils\GSC_Constants.cs" />
@@ -95,19 +98,21 @@
     <Compile Include="Assets\Game\Scripts\Core\Containers\GSC_TextureContainer.cs" />
     <Compile Include="Assets\Game\Scripts\Core\GSC_ScriptManager.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Conditions\GSC_Conditions.cs" />
+    <Compile Include="Assets\Game\Scripts\Utils\GSC_FileCommandInterpreter.cs" />
     <Compile Include="Assets\Game\Scripts\Graphics\GSC_GraphicElement.cs" />
+    <Compile Include="Assets\Game\Scripts\Core\Elements\Actions\GSC_ChangeBackgroundAction.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\GSC_ContainerUnit.cs" />
     <Compile Include="Assets\Game\Scripts\Utils\GSC_ProviderGroupData.cs" />
     <Compile Include="Assets\Game\Scripts\Core\GSC_GameManager.cs" />
-    <Compile Include="Assets\Game\Scripts\UI Elements\Components\GSC_ShowDialogueBoxAction.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Story Script\GSC_CommandInterpreter.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Containers\GSC_SpriteContainer.cs" />
     <Compile Include="Assets\Game\Scripts\UI Elements\GSC_ScreenInputController.cs" />
     <Compile Include="Assets\Game\Scripts\Core\Elements\Story Script\GSC_ScriptBlock.cs" />
     <Compile Include="Assets\Game\Scripts\Graphics\GSC_FullScreenLayer.cs" />
+    <Compile Include="Assets\Game\Scripts\Core\Elements\Actions\GSC_ShowFullTextDialogueAction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Resources\Data\Story\Story.txt" />
+    <None Include="Assets\Resources\Data\Story\Script Testing.txt" />
     <None Include="Assets\Unity Packages\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\Unity Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\Unity Packages\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />

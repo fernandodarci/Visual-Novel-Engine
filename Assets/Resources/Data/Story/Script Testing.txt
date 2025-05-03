@@ -1,0 +1,21 @@
+@bg "Data\Scene Sprites\Testing\Frame A00" 0 0 1 1 false
+@bg "Data\Scene Sprites\Testing\Frame A01" 0 0 1 1 false
+Corin "Tenho certeza de ter deixado por aqui..." -fade=0.5 -wait=0.2
+@bg "Data\Scene Sprites\Testing\Frame A02" 0 0 1 1 false
+Corin "So nao consigo me lembrar onde..." -wait=0.2
+Joe "O caderno azul esta na prateleira de cima." -wait=0.2
+@bg "Data\Scene Sprites\Testing\Frame A03" 0 0 1 1 false
+Corin "Voce por aqui? Por que nao estou supresa..." -wait=0.2 -h
+@bg "Data\Scene Sprites\Testing\Frame A04" 0 0 1 1 false
+@wait 2
+Joe "Nao esta feliz de me ver?" -wait=0.2 -h
+@bg "Data\Scene Sprites\Testing\Frame A05" 0 0 1 3 false
+@bg "Data\Scene Sprites\Testing\Frame A06" 0 0 1 1 false
+Corin "Feliz? Voce so pode estar brincando..." -wait=0.2 -h
+@bg "Data\Scene Sprites\Testing\Frame A07" 0 0 1 1 false
+@bg "Data\Scene Sprites\Testing\Frame A08" 0 0 1 1 false
+Corin "A unica coisa que me deixaria feliz e se voce desaparecesse..." -wait=0.2 -h
+@bg "Data\Scene Sprites\Testing\Frame A09" 0 0 1 1 false
+@bg "Data\Scene Sprites\Testing\Frame A10" 0 0 1 1 false
+Corin "Pra sempre." -wait=0.2 -h
+@bg "Data\Scene Sprites\Main Menu\The Eve Protocol" 0 0 1 1 false

@@ -6,10 +6,7 @@ using UnityEngine;
 
 public class GSC_CommandInterpreter : GSC_Singleton<GSC_CommandInterpreter>
 {
-    public GSC_Story story;
-    private string currentStoryBlock = string.Empty;
-    private int currentScene = -1;
-    private GSC_ContainerUnit currentDialogueBox;
+    public List<GSC_ScriptAction> Commands = new List<GSC_ScriptAction>();
 
     public static List<string> SplitWithQuotes(string input)
     {
@@ -55,60 +52,27 @@ public class GSC_CommandInterpreter : GSC_Singleton<GSC_CommandInterpreter>
 
         if (line[0].StartsWith('@'))
         {
-            if (TryToDecodeToSetBlock(line)) return true;
-            if (TryToDecodeToAddScene(line)) return true;
-            if (TryDecodeToChangeBackground(line)) return true;
+            if (TryDecodeCommand(line)) return true;
             Debug.Log("Unknown command: " + line[0]);
             return false;
         }
         else return TryDecodeToShowDialogue(line); //If no special character is on it, it can be a dialogue.
     }
 
-    private bool TryToDecodeToSetBlock(string[] line)
+    private bool TryDecodeCommand(string[] line)
     {
-        if (line[0].CompareInv("@block") && line.Length >= 2 && !line[1].IsNullOrEmpty())
-        {
-            if (story == null)
-            {
-                story = new GSC_Story();
-                story.Blocks = new List<GSC_ScriptBlock>();
-            }
-            else if (story.Blocks.Any(x => x.Name == line[1].Trim())) return false;
+        if(Commands.IsNullOrEmpty()) return false;
 
-            GSC_ScriptBlock block = new GSC_ScriptBlock();
-            block.Name = line[1].Trim();
-            block.Units = new List<GSC_ScriptUnit>();
-            story.Blocks.Add(block);
-            currentStoryBlock = block.Name;
-            currentScene = -1; //Reset the scene index
-            return true;
+        foreach(var command in Commands)
+        {
+            GSC_ContainerUnit unit = command.TryDecodeScript(line);
+            if(unit != null)
+            {
+                GSC_ScriptManager.Instance.EnqueueCommand(unit);
+            }
         }
         return false;
     }
-
-    private bool TryToDecodeToAddScene(string[] line)
-    {
-        if (!line[0].CompareInv("@scene")) return false;
-        if (story == null || story.Blocks.IsNullOrEmpty() || currentStoryBlock == string.Empty)
-        {
-            Debug.LogError("No block defined. Use @block to define a block first.");
-            return false;
-        }
-        var block = story.Blocks.FirstOrDefault(x => x.Name == currentStoryBlock);
-        if (block == null)
-        {
-            Debug.LogError($"Block '{currentStoryBlock}' not found.");
-            return false;
-        }
-
-        if (block.Units == null) block.Units = new List<GSC_ScriptUnit>();
-        GSC_ScriptUnit unit = new GSC_ScriptUnit();
-        unit.Actions = new List<GSC_ScriptAction>();
-        currentScene++;
-        block.Units.Add(unit);
-        return true;
-    }
-
 
     //@bg "path/to/sprite" 1 2 3.0 4.0 true
     private bool TryDecodeToChangeBackground(string[] line)
@@ -186,10 +150,10 @@ public class GSC_CommandInterpreter : GSC_Singleton<GSC_CommandInterpreter>
             string dialogue = args[0].Trim();
 
             // Default values for optional parameters
-            float fade = 0f;
-            float duration = 0f;
+            float fade = 0.5f;
+            float duration = 1f;
             bool append = false;
-            float wait = 0f;
+            float wait = -1f;
             bool hide = false;
 
             // Parse named optional parameters in any order: key=value
@@ -260,4 +224,5 @@ public class GSC_CommandInterpreter : GSC_Singleton<GSC_CommandInterpreter>
     }
 
 }
+
 

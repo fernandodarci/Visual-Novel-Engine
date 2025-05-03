@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static GSC_CommandManager;
@@ -10,23 +11,15 @@ public enum GSC_NavigationUserInput
 
 public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
 {
-    private GSC_Story Story;
     private GSC_ScriptBlock Block;
     private bool NavigationMode;
     private int CurrentScene;
     private int NavigationScene;
     private GSC_NavigationUserInput userInput;
 
-    public void StartStory(GSC_Story story)
+    public void StartStory(GSC_ScriptBlock story)
     {
-        if (story == null)
-        {
-            Debug.Log("No story provided. Aborting...");
-            return;
-        }
-        Story = story;
         CurrentScene = 0;
-        Block = Story.Blocks[0];
         RunStory(Block);
     }
 
@@ -56,8 +49,7 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         
         if (!actions.IsNullOrEmpty())
         {
-            List<GSC_CommandAction> units 
-                = new List<GSC_CommandAction>();
+            List<GSC_CommandAction> units = new List<GSC_CommandAction>();
             
             foreach (var action in actions)
             {
@@ -101,7 +93,8 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
                 GSC_ScriptBlock nextSequence = null;
                 while (nextSequence == null)
                 {
-                    nextSequence = Story.Blocks.Find(x => x.Name == Block.SequenceToFollow);
+                    //To do: Make it wait until a new sequence is set.
+                    //nextSequence = Story.Blocks.Find(x => x.Name == Block.SequenceToFollow);
                     if (nextSequence != null)
                     {
                         SetupStoryPoint(nextSequence);
@@ -193,6 +186,9 @@ public class GSC_ScriptManager : GSC_Singleton<GSC_ScriptManager>
         return currentInput;
     }
 
-   
+    public void EnqueueCommand(GSC_ContainerUnit unit)
+    {
+        throw new NotImplementedException();
+    }
 }
 

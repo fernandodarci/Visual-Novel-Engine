@@ -62,6 +62,7 @@ public class GSC_ElementView : MonoBehaviour
 
             yield return null;
         }
+        Hide();
     }
 
     public void Show(bool interact = false)

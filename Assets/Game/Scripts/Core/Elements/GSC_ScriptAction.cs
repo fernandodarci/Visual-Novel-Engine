@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static GSC_CommandManager;
 
 [Serializable]
@@ -24,27 +22,9 @@ public abstract class GSC_ScriptAction
     }
 
     protected abstract IEnumerator InnerAction(Func<bool> paused, Func<bool> ends, Action onEnd);
-    
-}
 
-public class GSC_NullAction : GSC_ScriptAction
-{
-    public override GSC_ContainerUnit Compile()
-    {
-        return new GSC_ContainerUnit("Null");
-    }
-    public override bool Decompile(GSC_ContainerUnit unit)
-    {
-        return true;
-    }
-    public override bool Validate(GSC_ContainerUnit unit)
-    {
-        return unit != null && unit.Calling == "Null";
-    }
-    protected override IEnumerator InnerAction(Func<bool> paused, Func<bool> ends, Action onEnd)
-    {
-        yield break;
-    }
+    public abstract GSC_ContainerUnit TryDecodeScript(string[] line);
+    
 }
 
 
